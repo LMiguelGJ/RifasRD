@@ -213,6 +213,8 @@ export interface LookupOrder {
 export interface LookupResult {
   raffle: { id: number; title: string; status: string };
   orders: LookupOrder[];
+  /** Optional server message shown when there are no matches. */
+  message?: string;
 }
 
 export interface PublicOrder {

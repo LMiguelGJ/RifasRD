@@ -1,0 +1,86 @@
+<div class="rifa-wrap mis-boletos-page">
+  <main class="mis-boletos-main container" aria-labelledby="mis-boletos-title">
+    <header class="mis-boletos-hero">
+      <div class="mis-boletos-hero__icon" aria-hidden="true">
+        <svg class="mis-boletos-hero__glow" xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
+      </div>
+      <h1 id="mis-boletos-title" class="mis-boletos-title luxury-headline luxury-headline--static">Validación de boletos</h1>
+      <p class="mis-boletos-subtitle">CONFIRMACIÓN OFICIAL</p>
+      @if (clientLabel) {
+        <p class="mis-boletos-client">Enlace de <strong>{{ clientLabel }}</strong></p>
+      }
+      <p class="mis-boletos-lead">Consulta el estado de tu participación mediante el enlace que recibiste tras validar tu pago.</p>
+    </header>
+
+    @if (loading) {
+      <div class="mis-boletos-card mis-boletos-card--loading" aria-live="polite" aria-busy="true">
+        <span class="mis-boletos-spinner" aria-hidden="true"></span>
+        <p class="mis-boletos-loading-text">Validando enlace…</p>
+      </div>
+    } @else if (loadError) {
+      <div class="mis-boletos-card mis-boletos-card--error" role="alert">
+        <div class="mis-boletos-error-head">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>
+          <h2 class="mis-boletos-error-title">Enlace no válido</h2>
+        </div>
+        <p class="mis-boletos-error-msg">{{ loadError }}</p>
+        <p class="mis-boletos-error-hint">
+          Si acabas de pagar, espera a que validemos tu comprobante o usa el
+          <a routerLink="/verificar" class="mis-boletos-link">verificador de boletos</a>.
+        </p>
+        <a routerLink="/" class="mis-boletos-btn-home">Volver al inicio</a>
+      </div>
+    } @else {
+      @if (order; as o) {
+      <article class="mis-boletos-card mis-boletos-card--success" aria-label="Consulta de boletos">
+        <div class="mis-boletos-valid-badge" [class.mis-boletos-valid-badge--pending]="isOrderPendingValidation" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
+          <span>{{ orderStatusLabel }}</span>
+        </div>
+
+        @if (raffleBannerUrl) {
+          <div class="mis-boletos-banner">
+            <img width="560" height="280" loading="eager" [src]="raffleBannerUrl" [alt]="o.raffle.title" />
+          </div>
+        }
+
+        <header class="mis-boletos-order-head">
+          <h2 class="mis-boletos-raffle-title">{{ o.raffle.title }}</h2>
+          <p class="mis-boletos-order-id">Orden #{{ o.order_id }}</p>
+        </header>
+
+        <dl class="mis-boletos-meta">
+          <div class="mis-boletos-meta__row"><dt>Participante</dt><dd>{{ o.customer_name }}</dd></div>
+          <div class="mis-boletos-meta__row">
+            <dt>Estado</dt>
+            <dd><span class="mis-boletos-status" [class.mis-boletos-status--pending]="isOrderPendingValidation">{{ orderStatusLabel }}</span></dd>
+          </div>
+          @if (o.validated_at) {
+            <div class="mis-boletos-meta__row"><dt>Validado</dt><dd>{{ formatWhen(o.validated_at) }}</dd></div>
+          }
+          <div class="mis-boletos-meta__row"><dt>Total pagado</dt><dd class="mis-boletos-meta__amount">RD$ {{ o.total_amount | moneyFormat }}</dd></div>
+          <div class="mis-boletos-meta__row"><dt>Boletos</dt><dd>{{ o.ticket_count | moneyFormat: 'integer' }}</dd></div>
+        </dl>
+
+        <section class="mis-boletos-tickets" aria-labelledby="mis-boletos-tickets-title">
+          <h3 id="mis-boletos-tickets-title" class="mis-boletos-tickets__title">
+            <svg class="mis-boletos-tickets__ico" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /><path d="M13 5v2" /><path d="M13 17v2" /><path d="M13 11v2" /></svg>
+            Tus números
+          </h3>
+          @if (displayTicketNumbers.length) {
+            <ul class="mis-boletos-ticket-list" role="list">
+              @for (number of displayTicketNumbers; track number) {
+                <li class="mis-boletos-ticket"><span class="mis-boletos-ticket__num">{{ number }}</span></li>
+              }
+            </ul>
+          } @else {
+            <p class="mis-boletos-footnote">Tus números se mostrarán aquí en cuanto validemos tu pago.</p>
+          }
+        </section>
+
+        <p class="mis-boletos-footnote">Conserva este enlace como comprobante. Los números mostrados son los asignados oficialmente a tu orden.</p>
+      </article>
+      }
+    }
+  </main>
+</div>

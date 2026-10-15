@@ -100,8 +100,18 @@ export class MockRifasApi extends RifasApi {
     return this.respond({ captcha_id: id, captcha_svg: this.renderCaptcha(text) });
   }
 
+  /**
+   * Demo switch: run `localStorage.setItem('rifas-demo-maintenance', '1')` in the browser console
+   * (and `removeItem` to undo) to preview the maintenance page.
+   */
   getOrderBlock(): Observable<OrderBlockStatus> {
-    return this.respond({ blocked: false, message: null });
+    let blocked = false;
+    try {
+      blocked = localStorage.getItem('rifas-demo-maintenance') === '1';
+    } catch {
+      /* storage unavailable: treat as not blocked */
+    }
+    return this.respond({ blocked, message: null });
   }
 
   createParticipant(request: ParticipantRequest): Observable<Participant> {
