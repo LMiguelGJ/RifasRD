@@ -1,0 +1,95 @@
+<div class="page-bg" aria-hidden="true"></div>
+<div class="shell-wrap" [class.shell-wrap--drawer-open]="drawerOpen()">
+  <header class="site-header">
+    <div class="container header-inner">
+      <button
+        type="button"
+        id="site-drawer-open-btn"
+        class="nav-drawer-toggle"
+        aria-controls="site-drawer-nav"
+        [attr.aria-expanded]="drawerOpen()"
+        (click)="toggleDrawer()"
+      >
+        @if (drawerOpen()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide nav-drawer-toggle__icon lucide-x"><!----><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path><!----></svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide nav-drawer-toggle__icon lucide-menu"><!----><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path><!----></svg>
+        }
+        <span class="sr-only">{{ drawerOpen() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+      </button>
+      <a routerLink="/" class="brand" aria-label="Rifas Luxury RD — inicio" (click)="closeDrawer()">
+        <span class="brand__frame">
+          <img src="/Logo_rifa.png" width="160" height="56" alt="Rifas Luxury RD" class="brand__img" />
+        </span>
+      </a>
+      <nav class="header-nav header-nav--desktop" aria-label="Principal">
+        <button type="button" class="link-ghost" (click)="goTo('rifas')">Rifas</button>
+        <button type="button" class="link-ghost" (click)="goTo('como-jugar')">Cómo jugar</button>
+        <button type="button" class="link-ghost" (click)="goTo('ganadores')">Ganadores</button>
+        <button
+          type="button"
+          class="theme-toggle"
+          [attr.title]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'"
+          [attr.aria-pressed]="theme.isDark()"
+          [attr.aria-label]="theme.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'"
+          (click)="theme.toggle()"
+        >
+          @if (theme.isDark()) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide theme-toggle__icon lucide-sun"><!----><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path><!----></svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide theme-toggle__icon lucide-moon"><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path><!----></svg>
+          }
+        </button>
+        <a
+          routerLink="/verificar"
+          routerLinkActive="verify-nav-link--active"
+          class="verify-nav-link"
+          aria-label="Verificar boleto"
+        ><span class="verify-nav-link__text">Verificar boleto</span></a>
+      </nav>
+    </div>
+  </header>
+  <div
+    class="nav-drawer-backdrop"
+    [class.nav-drawer-backdrop--visible]="drawerOpen()"
+    aria-hidden="true"
+    (click)="closeDrawer()"
+  ></div>
+  <aside
+    id="site-mobile-drawer"
+    class="nav-drawer"
+    [class.nav-drawer--open]="drawerOpen()"
+    [attr.aria-hidden]="!drawerOpen()"
+  >
+    <nav id="site-drawer-nav" class="nav-drawer__nav" aria-label="Principal">
+      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('rifas')">Rifas</button>
+      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('como-jugar')">Cómo jugar</button>
+      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('ganadores')">Ganadores</button>
+      <div class="nav-drawer__row">
+        <span class="nav-drawer__row-label">Tema</span>
+        <button
+        type="button"
+        class="theme-toggle"
+        [attr.title]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'"
+        [attr.aria-pressed]="theme.isDark()"
+        [attr.aria-label]="theme.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'"
+        (click)="theme.toggle()"
+      >
+        @if (theme.isDark()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide theme-toggle__icon lucide-sun"><!----><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path><!----></svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide theme-toggle__icon lucide-moon"><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path><!----></svg>
+        }
+      </button>
+      </div>
+      <a
+        routerLink="/verificar"
+        routerLinkActive="verify-nav-link--active"
+        class="verify-nav-link nav-drawer__verify"
+        aria-label="Verificar boleto"
+        (click)="closeDrawer()"
+      ><span class="verify-nav-link__text">Verificar boleto</span></a>
+    </nav>
+  </aside>
+  <router-outlet />
+</div>
