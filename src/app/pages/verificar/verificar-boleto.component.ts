@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-verificar-boleto',
   standalone: true,
   template: '<p>verificar (T6)</p>',
 })
-export class VerificarBoletoComponent {}
+export class VerificarBoletoComponent {
+  @Input() embedded = false;
+}
