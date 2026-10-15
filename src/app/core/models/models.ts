@@ -132,7 +132,8 @@ export interface CreateOrderRequest {
   phone: string;
   email?: string;
   participant_id?: number;
-  bank_account_id: number;
+  /** Sent only when the customer picked a bank account. */
+  bank_account_id?: number;
   captcha_id?: string;
   captcha_answer?: string;
   turnstile_token?: string;

@@ -1,12 +1,19 @@
-import { Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { NgxsmkTelInputComponent } from 'ngxsmk-tel-input';
 import { catchError, forkJoin, map, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { RifasApi } from '../../core/api/rifas-api';
 import { Category, PrizeNumber, Winner } from '../../core/models/models';
+import { ThemeService } from '../../core/services/theme.service';
 import { formatWhen } from '../../core/utils/format';
 import { MoneyFormatPipe } from '../../shared/pipes/money-format.pipe';
+import { TurnstileWidgetComponent } from '../../shared/turnstile-widget.component';
 import { VerificarBoletoComponent } from '../verificar/verificar-boleto.component';
+import { PurchaseFlow } from './purchase-flow';
 import { RaffleCardVm, toRaffleCard } from './raffle-card.vm';
 
 interface CategoryFilter {
@@ -28,12 +35,14 @@ interface DescriptionModal {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MoneyFormatPipe, VerificarBoletoComponent],
+  imports: [MoneyFormatPipe, VerificarBoletoComponent, FormsModule, NgxsmkTelInputComponent, TurnstileWidgetComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly api = inject(RifasApi);
+  private readonly sanitizer = inject(DomSanitizer);
+  protected readonly themeService = inject(ThemeService);
 
   /** Cards switch to a countdown during the last 24 hours before the draw. */
   static readonly DRAW_COUNTDOWN_MAX_MS = 24 * 60 * 60 * 1000;
@@ -69,7 +78,28 @@ export class HomeComponent implements OnInit, OnDestroy {
   imagePreview: ImagePreview | null = null;
   descriptionModal: DescriptionModal | null = null;
   whatsappHelpModalOpen = false;
-  modalOpen = false;
+
+  @ViewChild('modalSheet') private modalSheet?: ElementRef<HTMLElement>;
+  @ViewChild('receiptInput') private receiptInputRef?: ElementRef<HTMLInputElement>;
+  @ViewChild('turnstile') private turnstile?: TurnstileWidgetComponent;
+  @ViewChild('purchaseForm') private purchaseFormRef?: NgForm;
+
+  /** The "JUGAR" checkout: state and rules live in PurchaseFlow, the template binds to it. */
+  protected readonly purchase = new PurchaseFlow({
+    api: this.api,
+    sanitizer: this.sanitizer,
+    isDrawFinished: raffle => this.isDrawFinished(raffle),
+    sheet: () => this.modalSheet?.nativeElement,
+    receiptInput: () => this.receiptInputRef?.nativeElement,
+    resetTurnstile: () => this.turnstile?.reset(),
+    onVisibilityChange: open => {
+      document.body.style.overflow = open ? 'hidden' : '';
+    },
+  });
+
+  get modalOpen(): boolean {
+    return this.purchase.open;
+  }
 
   private countdownTimer?: ReturnType<typeof setInterval>;
 
@@ -81,6 +111,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.countdownTimer !== undefined) clearInterval(this.countdownTimer);
+    this.purchase.destroy();
     document.body.style.overflow = '';
   }
 
@@ -434,10 +465,30 @@ export class HomeComponent implements OnInit, OnDestroy {
     else if (this.imagePreview) this.closeImagePreview();
   }
 
-  // ---- purchase (wired in the checkout task) --------------------------------
+  // ---- purchase -------------------------------------------------------------
 
   openPurchase(raffle: RaffleCardVm): void {
-    void raffle;
+    if (this.cannotPlayRaffle(raffle)) return;
+    this.imagePreview = null;
+    this.descriptionModal = null;
+    this.purchase.openFor(raffle);
+    setTimeout(() => {
+      this.purchaseFormRef?.resetForm({
+        purchaseNombreApellidos: '',
+        purchaseEmail: '',
+        purchasePhoneE164: null,
+        purchaseTerms: false,
+      });
+    }, 0);
+  }
+
+  /** Enter inside a field submits the purchase instead of the browser default. */
+  protected onPurchaseFormEnter(event: Event, form: NgForm): void {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.type === 'file') return;
+    if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLSelectElement)) return;
+    event.preventDefault();
+    this.purchase.submit(form);
   }
 
   private releaseScrollIfIdle(): void {

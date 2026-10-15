@@ -33,7 +33,11 @@
               "src/styles/global.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "qrcode",
+              "intl-tel-input"
+            ]
           },
           "configurations": {
             "production": {

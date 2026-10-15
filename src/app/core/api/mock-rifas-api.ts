@@ -20,6 +20,7 @@ import {
   Raffle,
   Winner,
 } from '../models/models';
+import { httpError } from '../utils/api-error';
 import { RaffleQuery, RifasApi } from './rifas-api';
 import { MOCK_BANK_ACCOUNTS, MOCK_CATEGORIES, MOCK_PRIZE_NUMBERS, MOCK_RAFFLES, MOCK_WINNERS } from './mock-data';
 
@@ -43,17 +44,6 @@ interface StoredOrder {
   /** Ticket numbers are assigned when the mock "validates" the payment. */
   ticketNumbers: string[];
   validatedAt: string | null;
-}
-
-/** HTTP-like error so the UI error handling is exercised exactly as with a real server. */
-export class MockHttpError extends Error {
-  constructor(
-    readonly status: number,
-    message: string,
-    readonly errors?: Record<string, string[]>,
-  ) {
-    super(message);
-  }
 }
 
 /**
@@ -86,7 +76,7 @@ export class MockRifasApi extends RifasApi {
   getRaffle(id: number): Observable<Raffle> {
     return defer(() => {
       const raffle = MOCK_RAFFLES.find(r => r.id === id);
-      return raffle ? of(raffle) : throwError(() => new MockHttpError(404, 'Rifa no encontrada.'));
+      return raffle ? of(raffle) : throwError(() => httpError(404, 'Rifa no encontrada.'));
     }).pipe(delay(250));
   }
 
@@ -122,16 +112,16 @@ export class MockRifasApi extends RifasApi {
   createOrder(raffleId: number, request: CreateOrderRequest, voucher: File): Observable<CreatedOrder> {
     return defer(() => {
       const raffle = MOCK_RAFFLES.find(r => r.id === raffleId);
-      if (!raffle) return throwError(() => new MockHttpError(404, 'Rifa no encontrada.'));
-      if (request.website) return throwError(() => new MockHttpError(422, 'Solicitud rechazada.'));
+      if (!raffle) return throwError(() => httpError(404, 'Rifa no encontrada.'));
+      if (request.website) return throwError(() => httpError(422, 'Solicitud rechazada.'));
       if (voucher.size > MAX_VOUCHER_BYTES) {
-        return throwError(() => new MockHttpError(422, 'El comprobante no puede superar 10 MB.'));
+        return throwError(() => httpError(422, 'El comprobante no puede superar 10 MB.'));
       }
       if (request.captcha_id) {
         const expected = this.captchaAnswers.get(request.captcha_id);
         if (!expected || expected !== (request.captcha_answer ?? '').trim().toUpperCase()) {
           return throwError(
-            () => new MockHttpError(422, 'El captcha es incorrecto. Inténtalo de nuevo.', { captcha_answer: ['invalid'] }),
+            () => httpError(422, 'El captcha es incorrecto. Inténtalo de nuevo.', { captcha_answer: ['invalid'] }),
           );
         }
         this.captchaAnswers.delete(request.captcha_id);
@@ -140,7 +130,7 @@ export class MockRifasApi extends RifasApi {
       if (quantity < raffle.min_tickets_per_user || quantity > raffle.max_tickets_per_user) {
         return throwError(
           () =>
-            new MockHttpError(
+            httpError(
               422,
               `La cantidad debe estar entre ${raffle.min_tickets_per_user} y ${raffle.max_tickets_per_user} boletos.`,
             ),
@@ -181,7 +171,7 @@ export class MockRifasApi extends RifasApi {
   lookupOrders(raffleId: number, body: LookupBody): Observable<LookupResult> {
     return defer(() => {
       const raffle = MOCK_RAFFLES.find(r => r.id === raffleId);
-      if (!raffle) return throwError(() => new MockHttpError(404, 'Rifa no encontrada.'));
+      if (!raffle) return throwError(() => httpError(404, 'Rifa no encontrada.'));
       const orders = this.load();
       let changed = false;
       for (const o of orders) changed = this.refreshValidation(o, orders) || changed;
@@ -205,7 +195,7 @@ export class MockRifasApi extends RifasApi {
       const orders = this.load();
       const found = orders.find(o => o.token === token && (!customerSlug || o.customerSlug === customerSlug));
       if (!found) {
-        return throwError(() => new MockHttpError(404, 'No encontramos una orden con este enlace.'));
+        return throwError(() => httpError(404, 'No encontramos una orden con este enlace.'));
       }
       if (this.refreshValidation(found, orders)) this.save(orders);
       const raffle = MOCK_RAFFLES.find(r => r.id === found.raffleId)!;

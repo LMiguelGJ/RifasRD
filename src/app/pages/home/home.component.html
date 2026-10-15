@@ -255,7 +255,524 @@
                 }
               </ul>
             }</section></div></div></div></section><footer class="site-footer"><div class="container footer-inner"><p>© {{ year }} Rifas Luxury RD. Todos los derechos reservados.</p></div></footer><button type="button" aria-haspopup="dialog" [attr.aria-label]="'Abrir ayuda por WhatsApp (849-361-6245). Hay mensaje de soporte disponible.'" class="fab-chat" (click)="openWhatsAppHelpModal()"><span class="fab-chat__icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" color="currentColor" aria-hidden="true" class="lucide fab-chat__icon lucide-message-circle"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg><span aria-hidden="true" class="fab-chat__badge"></span></span></button></div>
-<!-- @@PURCHASE_MODAL@@ -->
+
+@if (purchase.open) {
+  <div class="modal-root" role="dialog" aria-modal="true" aria-labelledby="purchase-title">
+    <div class="modal-backdrop" (click)="purchase.close()"></div>
+    <div class="modal-sheet" #modalSheet>
+      <div class="modal-top">
+        @if (!purchase.purchaseFlowSuccess) {
+          <button type="button" aria-label="Volver" class="modal-icon-btn modal-top__edge" (click)="purchase.close()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+        }
+        <h2 id="purchase-title" class="modal-title modal-top__title luxury-headline luxury-headline--static">{{ purchase.activeRaffle?.title }}</h2>
+        <button type="button" aria-label="Cerrar" class="modal-icon-btn modal-top__edge" (click)="purchase.close()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+
+      @if (purchase.purchaseFlowSuccess) {
+        @if (purchase.showPublicViewSharePanel) {
+          <div class="purchase-received">
+            <div class="purchase-received__hero">
+              <div class="purchase-received__check" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div>
+              <h2 id="purchase-received-title" class="purchase-received__headline">¡COMPROBANTE RECIBIDO!</h2>
+              <p class="purchase-received__prize-name">{{ purchase.activeRaffle?.title }}</p>
+              <p class="purchase-received__amount">Monto: <span class="purchase-received__amount-money">RD$ {{ purchase.successAmountNumber | moneyFormat }}</span></p>
+            </div>
+
+            <div class="purchase-received__numbers-panel">
+              <div class="purchase-received__numbers-head">
+                <span class="purchase-received__ticket-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg></span>
+                <span class="purchase-received__numbers-label">TUS NÚMEROS ASIGNADOS</span>
+                <span class="purchase-received__badge-count">{{ purchase.successTicketCount }}</span>
+              </div>
+              @if (purchase.successTickets.length > 0) {
+                <div class="purchase-received__numbers-grid">
+                  @for (t of purchase.successTickets; track t.number) {
+                    <div class="purchase-received__num-card">
+                      <span class="purchase-received__num-card-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg></span>
+                      <span class="purchase-received__num-value">{{ t.number }}</span>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="purchase-received__numbers-empty">Tus números se asignarán automáticamente al azar cuando validemos tu pago.</p>
+              }
+              <div class="purchase-received__dash" aria-hidden="true"></div>
+              <div class="purchase-received__status">
+                <div class="purchase-received__pending">
+                  <svg class="purchase-received__pending-ico" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>
+                  <span>PENDIENTE DE VALIDACIÓN</span>
+                </div>
+                <div class="purchase-received__review-time" role="status">
+                  Tiempo de revisión: <span class="purchase-received__review-time-range">de 12 a 24 horas</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="purchase-received__share-panel" aria-labelledby="purchase-share-title">
+              <h3 id="purchase-share-title" class="purchase-received__share-title">Tu enlace personal</h3>
+              <p class="purchase-received__share-lead">Escanea el código QR o guarda el enlace para consultar tus boletos mientras validamos tu pago.</p>
+              <div class="purchase-received__qr-wrap">
+                @if (purchase.publicViewQrDataUrl) {
+                  <img class="purchase-received__qr" [src]="purchase.publicViewQrDataUrl" width="200" height="200" alt="Código QR de tu enlace personal" />
+                } @else {
+                  <div class="purchase-received__qr-loading" aria-live="polite">
+                    <span class="purchase-received__qr-spinner" aria-hidden="true"></span>
+                    <span>Generando código QR…</span>
+                  </div>
+                }
+              </div>
+              @if (purchase.successPublicViewUrl) {
+                <div class="purchase-received__link-row">
+                  <input class="purchase-received__link-input" type="text" readonly [value]="purchase.successPublicViewUrl" aria-label="Enlace personal" (click)="$any($event.target).select()" />
+                </div>
+              }
+              <div class="purchase-received__copy-wrap">
+                <button
+                  type="button"
+                  class="purchase-received__link-copy"
+                  [class.purchase-received__link-copy--done]="purchase.publicViewLinkCopyDone"
+                  [disabled]="!purchase.successPublicViewUrl && !purchase.publicViewQrDataUrl"
+                  (click)="purchase.togglePublicViewCopyChoice()"
+                >
+                  <svg color="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <span>{{ purchase.publicViewLinkCopyDone ? (purchase.publicViewCopyDoneKind === 'qr' ? '¡QR copiado!' : '¡Enlace copiado!') : 'Copiar enlace o QR' }}</span>
+                </button>
+                @if (purchase.publicViewCopyChoiceOpen) {
+                  <div class="purchase-received__copy-choice" role="dialog">
+                    <p class="purchase-received__copy-choice-title">¿Desea copiar el enlace o el código QR?</p>
+                    <div class="purchase-received__copy-choice-actions">
+                      <button type="button" class="purchase-received__copy-choice-btn" (click)="purchase.copyPublicViewUrlText()">Copiar enlace</button>
+                      <button type="button" class="purchase-received__copy-choice-btn purchase-received__copy-choice-btn--qr" [disabled]="!purchase.publicViewQrDataUrl" (click)="purchase.copyPublicViewQrImage()">Copiar código QR</button>
+                    </div>
+                  </div>
+                }
+              </div>
+              <div class="purchase-received__share-actions">
+                @if (purchase.canNativeSharePublicView) {
+                  <button type="button" class="purchase-received__share-btn" (click)="purchase.sharePublicViewLink()">
+                    <svg color="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                    <span>Compartir enlace</span>
+                  </button>
+                }
+                @if (purchase.successPublicViewUrl) {
+                  <a class="purchase-received__open-link" target="_blank" rel="noopener noreferrer" [href]="purchase.successPublicViewUrl">Abrir mi página de boletos</a>
+                }
+              </div>
+            </div>
+
+            @if (purchase.successTickets.length > 0) {
+              <button type="button" class="purchase-received__copy-btn" [class.purchase-received__copy-btn--done]="purchase.ticketsCopyDone" (click)="purchase.copyTicketNumbers()">
+                <svg color="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>{{ purchase.ticketsCopyDone ? '¡Números copiados!' : 'Copiar números' }}</span>
+              </button>
+            }
+
+            <div class="purchase-received__notice">
+              <div class="purchase-received__notice-head">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+                <span class="purchase-received__notice-title">¡IMPORTANTE!</span>
+              </div>
+              <p class="purchase-received__notice-text">
+                Tus números han sido <strong class="purchase-received__em">reservados</strong>. Guarda el
+                <strong class="purchase-received__em">código QR</strong> o el enlace de arriba. No enviamos listados por WhatsApp. También puedes usar el
+                <strong class="purchase-received__em purchase-received__em--gold">verificador</strong> con tu teléfono o cédula.
+              </p>
+              <a routerLink="/verificar" class="purchase-received__verify-bar" (click)="purchase.close()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <span>Consulta tus boletos en el <span class="purchase-received__verify-cta">VERIFICADOR</span></span>
+              </a>
+            </div>
+
+            <button type="button" class="btn-confirm purchase-received__done" (click)="purchase.close()">ENTENDIDO</button>
+          </div>
+        } @else {
+          <div class="purchase-success purchase-success--fallback">
+            <div class="purchase-success__mark" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <h3 id="purchase-received-title" class="purchase-success__title">¡Pedido registrado!</h3>
+            <p class="purchase-success__text">Tu orden fue enviada. Validaremos tu pago en un plazo máximo de <strong class="highlight-blue">24 horas</strong>.</p>
+          </div>
+          <div class="modal-footer modal-footer--solo">
+            <button type="button" class="btn-confirm" (click)="purchase.close()">CERRAR</button>
+          </div>
+        }
+      } @else {
+        <p class="modal-sub">Completa tu compra de boletos</p>
+        @if (purchase.activeRaffle && purchase.cannotPlay(purchase.activeRaffle)) {
+          <p class="modal-alert modal-alert--finished" role="status">Este sorteo ya finalizó. No se pueden comprar más boletos.</p>
+        }
+        @if (purchase.purchaseError) {
+          <p class="modal-alert modal-alert--error" role="alert">{{ purchase.purchaseError }}</p>
+        }
+
+        <div class="modal-block modal-block--tickets">
+          <div class="ticket-qty-card" role="group" aria-labelledby="ticket-qty-heading">
+            <div class="ticket-qty-card__shine" aria-hidden="true"></div>
+            <div class="ticket-qty-card__head">
+              <div class="ticket-qty-card__icon-bubble" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05b8f3" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg></div>
+              <div class="ticket-qty-card__head-text">
+                <p class="ticket-qty-card__kicker">Tu participación</p>
+                <h3 class="ticket-qty-card__title" id="ticket-qty-heading">CÓMO QUIERES PARTICIPAR</h3>
+              </div>
+            </div>
+
+            @if (purchase.hasPublicCombos) {
+              <div class="purchase-mode-tabs" role="tablist" aria-label="Tipo de compra">
+                <button type="button" role="tab" class="purchase-mode-tabs__btn" [class.purchase-mode-tabs__btn--active]="purchase.purchaseSelectionMode === 'combo'" [attr.aria-selected]="purchase.purchaseSelectionMode === 'combo'" (click)="purchase.setMode('combo')">Paquetes</button>
+                <button type="button" role="tab" class="purchase-mode-tabs__btn" [class.purchase-mode-tabs__btn--active]="purchase.purchaseSelectionMode === 'custom'" [attr.aria-selected]="purchase.purchaseSelectionMode === 'custom'" (click)="purchase.setMode('custom')">Cantidad libre</button>
+              </div>
+            }
+
+            @if (purchase.purchaseRaffleLoadError) {
+              <p class="modal-alert modal-alert--error combo-list__load-error" role="status">{{ purchase.purchaseRaffleLoadError }}</p>
+            }
+
+            @if (purchase.showComboPicker) {
+              <div class="combo-list" role="radiogroup" aria-labelledby="ticket-qty-heading">
+                @for (combo of purchase.publicCombos; track combo.id; let i = $index) {
+                  <label
+                    class="combo-row"
+                    [class]="'combo-row combo-row--' + purchase.comboAccentClass(combo)"
+                    [class.combo-row--selected]="purchase.selectedComboId === combo.id"
+                    [style.--combo-anim-delay]="(i * 0.06) + 's'"
+                  >
+                    <span class="combo-row__prize-ring" aria-hidden="true"></span>
+                    <span class="combo-row__prize-badge" aria-hidden="true">★ PREMIADO</span>
+                    <span class="combo-row__sparkles" aria-hidden="true"><span class="combo-row__spark"></span><span class="combo-row__spark"></span><span class="combo-row__spark"></span><span class="combo-row__spark"></span></span>
+                    <input type="radio" name="ticketCombo" class="combo-row__input" [value]="combo.id" [checked]="purchase.selectedComboId === combo.id" (change)="purchase.selectCombo(combo.id)" />
+                    <span class="combo-row__ticket" aria-hidden="true">
+                      <span class="combo-row__ticket-inner">
+                        <span class="combo-row__ticket-body">
+                          <span class="combo-row__ticket-star">★</span>
+                          <span class="combo-row__ticket-main">
+                            <span class="combo-row__ticket-qty">{{ combo.quantity }}</span>
+                            <span class="combo-row__ticket-label">BOLETOS</span>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                    <span class="combo-row__price">
+                      <span class="combo-row__price-amount">RD$ {{ combo.package_price | moneyFormat }}</span>
+                      <span class="combo-row__price-action">
+                        <span class="combo-row__price-label">Seleccionar</span>
+                        <span class="combo-row__radio" aria-hidden="true"></span>
+                      </span>
+                    </span>
+                  </label>
+                }
+              </div>
+            }
+
+            @if (purchase.showCustomTicketStepper) {
+              <p class="modal-hint ticket-qty-card__lead">Selección aleatoria del sistema. (Mínimo: {{ purchase.activeRaffle?.minTickets }})</p>
+              <div class="stepper stepper--highlight">
+                <button type="button" aria-label="Menos" class="stepper__btn stepper__btn--dec" [disabled]="purchase.ticketQty <= (purchase.activeRaffle?.minTickets ?? 1)" (click)="purchase.decTickets()">
+                  <span class="stepper__btn-face"><span class="stepper__btn-glyph" aria-hidden="true">−</span></span>
+                </button>
+                <div class="stepper__value stepper__value--conic" aria-live="polite" aria-atomic="true"><span class="stepper__value-inner">{{ purchase.ticketQty }}</span></div>
+                <button type="button" aria-label="Más" class="stepper__btn stepper__btn--inc" [disabled]="purchase.ticketQty >= (purchase.activeRaffle?.maxTicketsPerUser ?? 1)" (click)="purchase.incTickets()">
+                  <span class="stepper__btn-face"><span class="stepper__btn-glyph" aria-hidden="true">+</span></span>
+                </button>
+              </div>
+            }
+
+            <div class="ticket-qty-total" aria-live="polite">
+              <span class="ticket-qty-total__label">Total a pagar</span>
+              <span class="ticket-qty-total__value">RD$ {{ purchase.totalPay | moneyFormat }}</span>
+            </div>
+            @if (purchase.showCustomTicketStepper) {
+              <p class="modal-hint ticket-qty-card__meta">
+                Compra mínima: {{ purchase.activeRaffle?.minTickets | moneyFormat: 'integer' }} boletos · Máximo: {{ purchase.activeRaffle?.maxTicketsPerUser | moneyFormat: 'integer' }} por usuario
+              </p>
+            } @else {
+              @if (purchase.selectedCombo; as combo) {
+                <p class="modal-hint ticket-qty-card__meta">
+                  Paquete: {{ combo.quantity }} boletos · Máximo por usuario: {{ purchase.activeRaffle?.maxTicketsPerUser | moneyFormat: 'integer' }}
+                </p>
+              }
+            }
+          </div>
+
+          <div class="info-box">
+            <span class="info-box__icon">i</span>
+            <p>Los números de boletos se <strong class="highlight-blue">asignarán automáticamente al azar</strong> tras validar tu pago. ¡Mayor cantidad = más oportunidades de ganar!</p>
+          </div>
+        </div>
+
+        <form class="modal-form" novalidate #purchaseForm="ngForm" (keydown.enter)="onPurchaseFormEnter($event, purchaseForm)">
+          <div class="form-row">
+            <label class="field">
+              <span>Nombre *</span>
+              <input
+                type="text"
+                name="purchaseNombreApellidos"
+                required
+                minlength="2"
+                maxlength="120"
+                placeholder="Ej: Juan o Juan Carlos"
+                autocomplete="name"
+                [pattern]="purchase.personFullNamePattern"
+                [ngModel]="purchase.nombreApellidos"
+                (ngModelChange)="purchase.onNombreApellidosChange($event)"
+                #nameCtrl="ngModel"
+                [class.purchase-input-invalid]="purchase.purchaseFieldShowError(nameCtrl, purchaseForm.submitted, purchase.nombreApellidos)"
+              />
+              @if (purchase.purchaseFieldShowError(nameCtrl, purchaseForm.submitted, purchase.nombreApellidos)) {
+                <small class="field__error">Escribe tu nombre. Solo letras y espacios.</small>
+              }
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label class="field">
+              <span>Teléfono (WhatsApp) *</span>
+              <ngxsmk-tel-input
+              name="purchasePhoneE164"
+              class="phone-sel"
+              [class.phone-sel--invalid-user]="purchase.purchasePhoneShowError(phoneCtrl, purchaseForm.submitted)"
+              [ngModel]="purchase.phoneE164"
+              #phoneCtrl="ngModel"
+              initialCountry="DO"
+              [preferredCountries]="['DO', 'US', 'ES']"
+              [separateDialCode]="true"
+              [allowDropdown]="true"
+              [dropdownAttachToBody]="false"
+              [dropdownZIndex]="9000"
+              [theme]="themeService.theme()"
+              variant="outline"
+              size="md"
+              [digitsOnly]="true"
+              nationalDisplay="digits"
+              formatWhenValid="typing"
+              [showErrorWhenTouched]="false"
+              errorText=""
+              [required]="true"
+              (inputChange)="purchase.onPhoneInputChange($event)"
+              (validityChange)="purchase.onPhoneValidityChange($event)"
+              ></ngxsmk-tel-input>
+              @if (purchase.purchasePhoneShowError(phoneCtrl, purchaseForm.submitted)) {
+                <small class="field__error">Teléfono inválido. Selecciona el país y escribe un número válido.</small>
+              }
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Correo electrónico <span class="field__optional">(opcional)</span></span>
+            <input
+              type="text"
+              name="purchaseEmail"
+              placeholder="correo@ejemplo.com"
+              inputmode="email"
+              autocomplete="email"
+              [pattern]="purchase.emailPatternOptional"
+              [(ngModel)]="purchase.email"
+              #emailCtrl="ngModel"
+              [class.purchase-input-invalid]="purchase.purchaseFieldShowError(emailCtrl, purchaseForm.submitted, purchase.email)"
+            />
+            @if (purchase.purchaseFieldShowError(emailCtrl, purchaseForm.submitted, purchase.email)) {
+              <small class="field__error">Escribe un correo válido (sin el símbolo +).</small>
+            }
+          </label>
+          <div class="modal-hint modal-hint--optional-contact" role="note">
+            <span class="modal-hint--optional-contact__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg></span>
+            <p class="modal-hint--optional-contact__text">Enviamos notificaciones de aprobaciones y ganadores por correo.</p>
+          </div>
+
+          <div class="field field--bank-grid field--bank-picker--luxury">
+            <span class="field--bank-grid__label">Banco a transferir *</span>
+            <p class="field--bank-grid__subtitle">Elige una opción.</p>
+            @if (purchaseForm.submitted && purchase.bankAccounts.length > 0 && purchase.selectedBankAccountId == null) {
+              <small class="field__error">Selecciona un banco para transferir.</small>
+            }
+            @if (!purchase.bankAccountsLoading && purchase.bankAccounts.length === 0) {
+              <p class="modal-alert modal-alert--error" role="status">Cuenta no disponible en este momento. Intenta de nuevo en unos minutos o contáctanos por WhatsApp.</p>
+            }
+            <div class="payment-select-shell payment-select-shell--bank-grid">
+              <div class="bank-account-grid" role="listbox" aria-label="Banco a transferir">
+                @for (bank of purchase.bankAccounts; track bank.id; let i = $index) {
+                  <button
+                    type="button"
+                    role="option"
+                    class="bank-account-card"
+                    [class.bank-account-card--selected]="purchase.selectedBankAccountId === bank.id"
+                    [attr.aria-selected]="purchase.selectedBankAccountId === bank.id"
+                    (click)="purchase.selectBankAccount(bank)"
+                  >
+                    @if (purchase.selectedBankAccountId === bank.id) {
+                      <span class="bank-account-card__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+                    }
+                    <span class="bank-account-card__inner">
+                      @if (bank.image?.url) {
+                        <img class="bank-account-card__logo" [src]="bank.image?.url" [alt]="bank.bank_name" />
+                      } @else {
+                        <span>{{ bank.bank_name }}</span>
+                      }
+                    </span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+          @if (purchase.selectedBank; as bank) {
+            <div class="payment-detail-card payment-detail-card--bank">
+              <div class="payment-detail-card__head">
+                <span class="payment-detail-card__icon payment-detail-card__icon--logo" aria-hidden="true">
+                  @if (bank.image?.url) {
+                    <img class="payment-detail-card__head-logo" alt="" [src]="bank.image?.url" />
+                  }
+                </span>
+                <div class="payment-detail-card__head-text">
+                  <span class="payment-detail-card__bank-title">{{ bank.bank_name }}</span>
+                  <span class="payment-detail-card__bank-type">{{ bank.account_type }} · {{ bank.currency }}</span>
+                </div>
+              </div>
+              <div class="payment-detail-card__account-row">
+                <div class="payment-detail-card__account-main">
+                  <span class="payment-detail-card__lbl">Número de cuenta</span>
+                  <p class="payment-detail-card__account-num">{{ bank.account_number }}</p>
+                </div>
+                <button type="button" class="payment-copy-btn" aria-label="Copiar número de cuenta" (click)="purchase.copyBankAccount(bank.account_number)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <span>{{ purchase.paymentCopyDone ? 'Copiado' : 'Copiar' }}</span>
+                </button>
+              </div>
+              <div class="payment-detail-card__block">
+                <span class="payment-detail-card__lbl">Titular</span>
+                <p class="payment-detail-card__value">{{ bank.account_holder_name }}</p>
+              </div>
+              <div class="payment-detail-card__hint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc3b" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide payment-detail-card__hint-ico lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                <p>Realiza la transferencia por el <strong class="highlight-gold">monto total</strong> y sube el comprobante abajo para validar tu compra con Rifas Luxury RD.</p>
+              </div>
+            </div>
+          } @else {
+            <p class="modal-hint modal-hint--pick-bank">Selecciona el banco al que transferirás para ver número de cuenta y titular.</p>
+          }
+
+          <div class="field">
+            <span>Comprobante de pago *</span>
+            <label class="upload-zone">
+              <input type="file" required accept="image/jpeg,image/png,application/pdf" #receiptInput (change)="purchase.onFileChange($event)" />
+              <span class="upload-zone__inner">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0l4 4m-4-4L8 8M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path></svg>
+                <span>{{ purchase.receiptFile ? 'Haz clic para cambiar el comprobante' : 'Haz clic para subir tu comprobante' }}</span>
+                <small>JPG, PNG o PDF (máx. 10 MB)</small>
+              </span>
+            </label>
+            @if (purchase.receiptFile) {
+              <div class="receipt-preview" aria-label="Vista previa del comprobante adjunto">
+                <p class="receipt-preview__label">Vista previa</p>
+                @if (purchase.receiptPreviewImgSafe) {
+                  <div class="receipt-preview__frame receipt-preview__frame--img">
+                    <img class="receipt-preview__img" alt="Vista previa del comprobante" [src]="purchase.receiptPreviewImgSafe" />
+                  </div>
+                } @else if (purchase.receiptPreviewPdfSafe) {
+                  <div class="receipt-preview__frame receipt-preview__frame--pdf">
+                    <iframe class="receipt-preview__pdf" title="Vista previa del comprobante en PDF" [src]="purchase.receiptPreviewPdfSafe"></iframe>
+                  </div>
+                }
+                <p class="receipt-preview__filename">{{ purchase.receiptName }}</p>
+              </div>
+            } @else if (purchaseForm.submitted) {
+              <small class="field__error">El comprobante de pago es requerido.</small>
+            }
+          </div>
+
+          <div class="field field--captcha-final">
+            @if (purchase.antiBotMode === 'turnstile') {
+              <span>Verificación de seguridad *</span>
+              <div class="turnstile-wrap">
+                <app-turnstile-widget
+                  #turnstile
+                  (resolved)="purchase.onTurnstileResolved($event)"
+                  (expired)="purchase.onTurnstileExpired()"
+                  (errored)="purchase.onTurnstileError()"
+                />
+              </div>
+              @if (purchaseForm.submitted && !purchase.turnstileToken) {
+                <small class="field__error">Completa la verificación de seguridad para continuar.</small>
+              }
+            } @else {
+              <span>Captcha *</span>
+              <div class="captcha-box">
+                @if (purchase.captchaLoading) {
+                  <p class="modal-hint" aria-live="polite">Cargando captcha…</p>
+                }
+                @if (purchase.captchaError) {
+                  <p class="modal-alert modal-alert--error">{{ purchase.captchaError }}</p>
+                  <button type="button" class="btn-confirm" [disabled]="purchase.captchaLoading" (click)="purchase.loadCaptcha()">Recargar captcha</button>
+                }
+                @if (purchase.captchaSvgSafe) {
+                  <div class="captcha-box__svg-wrap"><div class="captcha-box__svg" [innerHTML]="purchase.captchaSvgSafe"></div></div>
+                  <button type="button" class="btn-confirm" aria-label="Recargar captcha" [disabled]="purchase.captchaLoading" (click)="purchase.loadCaptcha()">Recargar</button>
+                }
+              </div>
+              <label class="field">
+                <span class="sr-only">Respuesta del captcha</span>
+                <input
+                  type="text"
+                  name="purchaseCaptchaAnswer"
+                  required
+                  inputmode="numeric"
+                  autocomplete="off"
+                  placeholder="Escribe el número del captcha"
+                  [(ngModel)]="purchase.captchaAnswer"
+                  #captchaCtrl="ngModel"
+                />
+                @if (captchaCtrl.invalid && (captchaCtrl.touched || purchaseForm.submitted)) {
+                  <small class="field__error">Escribe el número del captcha.</small>
+                }
+              </label>
+            }
+          </div>
+
+          <label class="terms">
+            <span class="terms__toggle-wrap">
+              <input type="checkbox" name="purchaseTerms" required class="terms__input" [(ngModel)]="purchase.acceptTerms" />
+              <span class="terms__switch" aria-hidden="true"></span>
+            </span>
+            <span class="terms__text">
+              Confirmo que mis datos (<strong>nombre</strong>, <strong>teléfono</strong> y <strong>correo</strong>) son correctos. Se me enviarán
+              <strong>correos de confirmación</strong> y <strong>seguimiento</strong> de mi solicitud. <strong class="highlight-gold">Rifas Luxury RD</strong>
+              no se hace responsable por datos mal ingresados.
+            </span>
+          </label>
+          @if (purchaseForm.submitted && !purchase.acceptTerms) {
+            <small class="field__error">Debes aceptar los términos para continuar.</small>
+          }
+
+          <div class="modal-footer">
+            <div class="total-block">
+              <span class="total-label">TOTAL A PAGAR</span>
+              <span class="total-value">RD$ {{ purchase.totalPay | moneyFormat }}</span>
+            </div>
+            <button type="button" class="btn-confirm btn-confirm--purchase" [disabled]="purchase.purchaseSubmitting" (click)="purchase.submit(purchaseForm)">
+              @if (purchase.purchaseSubmitting) {
+                ENVIANDO…
+              } @else {
+                CONFIRMAR COMPRA
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              }
+            </button>
+          </div>
+          <p class="modal-note"><span aria-hidden="true">ⓘ</span> Tu compra será validada en máximo 24 horas.</p>
+        </form>
+      }
+    </div>
+
+    @if (purchase.purchaseSubmitting) {
+      <div class="purchase-submit-overlay" role="status" aria-live="polite" aria-busy="true" aria-label="Enviando compra, espera un momento">
+        <div class="purchase-submit-overlay__scrim" aria-hidden="true"></div>
+        <div class="purchase-submit-overlay__panel">
+          <div class="purchase-submit-overlay__spinner" aria-hidden="true"></div>
+          <p class="purchase-submit-overlay__title">Enviando tu compra…</p>
+          <p class="purchase-submit-overlay__hint">No cierres esta ventana.</p>
+        </div>
+      </div>
+    }
+  </div>
+}
+
 
 @if (descriptionModal; as dm) {
   <div class="raffle-desc-modal" role="dialog" aria-modal="true" aria-labelledby="raffle-desc-title">
