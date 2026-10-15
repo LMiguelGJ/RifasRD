@@ -1,0 +1,156 @@
+[
+ {
+  "id": 18,
+  "bank_name": "Asociacion Popular (APAP)",
+  "account_type": "Ahorro",
+  "account_number": "00000000001",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": null,
+  "image_id": 67122,
+  "created_at": "2026-10-08T18:24:13.000000Z",
+  "updated_at": "2026-10-08T18:24:13.000000Z",
+  "image": {
+   "id": 67122,
+   "path": "static/bank_6ac7dfcc9cf482.59477549.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6ac7dfcc9cf482.59477549.webp",
+   "mime_type": "image/webp",
+   "size": 15584
+  }
+ },
+ {
+  "id": 3,
+  "bank_name": "Banco Reservas",
+  "account_type": "Ahorro",
+  "account_number": "00000000002",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": "#05b8f3",
+  "image_id": 29,
+  "created_at": "2026-04-11T20:42:06.000000Z",
+  "updated_at": "2026-04-11T20:42:06.000000Z",
+  "image": {
+   "id": 29,
+   "path": "static/bank_69dab21deaf941.87069052.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_69dab21deaf941.87069052.webp",
+   "mime_type": "image/webp",
+   "size": 4314
+  }
+ },
+ {
+  "id": 19,
+  "bank_name": "BHD",
+  "account_type": "Ahorro",
+  "account_number": "00000000003",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": null,
+  "image_id": 67646,
+  "created_at": "2026-10-09T00:29:56.000000Z",
+  "updated_at": "2026-10-09T00:31:35.000000Z",
+  "image": {
+   "id": 67646,
+   "path": "static/bank_6ac835e6cd6689.12766233.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6ac835e6cd6689.12766233.webp",
+   "mime_type": "image/webp",
+   "size": 16702
+  }
+ },
+ {
+  "id": 7,
+  "bank_name": "Efectivo",
+  "account_type": "Solo personas de Constanza.",
+  "account_number": "00000000004",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": "#15803d",
+  "image_id": 14200,
+  "created_at": "2026-06-29T03:31:14.000000Z",
+  "updated_at": "2026-06-29T03:31:14.000000Z",
+  "image": {
+   "id": 14200,
+   "path": "static/bank_6a41e7020aa879.09808133.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6a41e7020aa879.09808133.webp",
+   "mime_type": "image/webp",
+   "size": 6720
+  }
+ },
+ {
+  "id": 14,
+  "bank_name": "Interbancaria a Qik",
+  "account_type": "Ahorro",
+  "account_number": "00000000005",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": null,
+  "image_id": 74579,
+  "created_at": "2026-09-05T17:17:14.000000Z",
+  "updated_at": "2026-10-13T12:50:44.000000Z",
+  "image": {
+   "id": 74579,
+   "path": "static/bank_6ace292399ee67.16376278.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6ace292399ee67.16376278.webp",
+   "mime_type": "image/webp",
+   "size": 8896
+  }
+ },
+ {
+  "id": 17,
+  "bank_name": "Popular",
+  "account_type": "Corriente",
+  "account_number": "00000000006",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": null,
+  "image_id": 66595,
+  "created_at": "2026-10-08T13:37:57.000000Z",
+  "updated_at": "2026-10-08T13:37:57.000000Z",
+  "image": {
+   "id": 66595,
+   "path": "static/bank_6ac79cb4b02f07.73812463.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6ac79cb4b02f07.73812463.webp",
+   "mime_type": "image/webp",
+   "size": 23346
+  }
+ },
+ {
+  "id": 8,
+  "bank_name": "Qik",
+  "account_type": "Ahorro",
+  "account_number": "00000000007",
+  "account_holder_name": "Titular Demo",
+  "holder_id": "000-0000000-0",
+  "currency": "DOP",
+  "is_active": true,
+  "sort_order": 0,
+  "color": "#05b8f3",
+  "image_id": 15612,
+  "created_at": "2026-07-07T17:11:15.000000Z",
+  "updated_at": "2026-09-02T13:28:35.000000Z",
+  "image": {
+   "id": 15612,
+   "path": "static/bank_6a4d33336d19a3.28320167.webp",
+   "url": "https://api.rifasluxuryrd.com/public/static/bank_6a4d33336d19a3.28320167.webp",
+   "mime_type": "image/webp",
+   "size": 12346
+  }
+ }
+]
