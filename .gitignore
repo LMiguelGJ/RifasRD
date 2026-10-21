@@ -1,15 +1,35 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
+# Build output and caches
 /dist
 /tmp
 /out-tsc
 /bazel-out
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
 
 # Node
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Research and lab material (never upload)
+/research/
+/.lab/
+/public/demo/rev/
+/.firecrawl/
+/.playwright-mcp/
+
+# Internal working docs (local only)
+/PLAN.md
+/odd/
+
+# Tooling caches
+/.atl/
 
 # IDEs and editors
 .idea/
@@ -28,15 +48,7 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
 # System files
 .DS_Store
 Thumbs.db
+*.log
