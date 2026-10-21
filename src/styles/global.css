@@ -187,3 +187,25 @@ textarea {
 .iti__country-list .iti__search-input::placeholder {
   color: var(--on-ink-muted) !important;
 }
+
+/* Legacy class names kept in templates, neutralized to the new system. */
+.luxury-headline {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.highlight-blue {
+  color: var(--on-ink);
+  font-weight: 700;
+}
+
+.highlight-gold {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.rifa-wrap {
+  position: relative;
+  z-index: 2;
+}

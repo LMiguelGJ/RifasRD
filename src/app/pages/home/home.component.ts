@@ -38,7 +38,7 @@ interface DescriptionModal {
   standalone: true,
   imports: [MoneyFormatPipe, FormsModule, NgxsmkTelInputComponent, TurnstileWidgetComponent, RouterLink],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css', './modal.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly api = inject(RifasApi);
