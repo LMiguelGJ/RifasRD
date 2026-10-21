@@ -19,7 +19,7 @@
   --ink-line: rgba(255, 255, 255, 0.14);
   --ink-line-strong: rgba(255, 255, 255, 0.3);
   --on-ink: #f6f6f7;
-  --on-ink-muted: #b7b7bf;
+  --on-ink-muted: #cfcfd6;
 
   /* Action red (fill behind white text) */
   --red: #c8260c;

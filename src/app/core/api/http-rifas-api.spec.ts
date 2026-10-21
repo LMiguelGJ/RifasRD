@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { CreatedOrder } from '../models/models';
 import { HttpRifasApi } from './http-rifas-api';
 

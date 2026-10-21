@@ -2,7 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit, inject, signal } from '@ang
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 
 
 /** Anchors on the home page that the header navigation scrolls to. */

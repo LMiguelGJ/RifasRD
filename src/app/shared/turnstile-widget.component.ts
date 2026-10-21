@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 
 interface TurnstileApi {
   render(
@@ -107,7 +107,7 @@ type MockState = 'idle' | 'verifying' | 'success';
       .ts-mock__brand {
         font-size: 0.62rem;
         line-height: 1.25;
-        color: #b5b5b5;
+        color: #d8d8dd;
         text-align: right;
       }
       .ts-mock__brand strong {

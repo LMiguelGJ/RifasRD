@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { NgxsmkTelInputComponent } from 'ngxsmk-tel-input';
 import { catchError, forkJoin, map, of } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { RifasApi } from '../../core/api/rifas-api';
 import { Category, PrizeNumber, Winner } from '../../core/models/models';
 import { formatWhen } from '../../core/utils/format';
@@ -446,8 +446,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   confirmWhatsAppSupport(): void {
-    const url = new URL(this.supportWhatsAppUrl);
-    if (url.origin === 'https://wa.me') window.open(url.href, '_blank', 'noopener,noreferrer');
+    const link = document.createElement('a');
+    link.href = this.supportWhatsAppUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
     this.closeWhatsAppHelpModal();
   }
 

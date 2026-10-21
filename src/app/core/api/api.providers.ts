@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { HttpRifasApi } from './http-rifas-api';
 import { MockRifasApi } from './mock-rifas-api';
 import { RifasApi } from './rifas-api';
