@@ -2,7 +2,7 @@
   <main class="verificar-main container" [attr.aria-labelledby]="embedded ? null : 'verificar-title'">
     @if (!embedded) {
       <header class="verificar-hero">
-        <div class="verificar-hero__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" class="lucide verificar-hero__search-glow lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></div>
+        <div class="verificar-hero__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" class="lucide verificar-hero__search-glow lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></div>
         <h1 id="verificar-title" class="verificar-title luxury-headline luxury-headline--static">Verificador</h1>
         <p class="verificar-subtitle">DE BOLETOS</p>
         <p class="verificar-lead">
@@ -17,14 +17,14 @@
 
       <label class="verificar-field" [class.verificar-field--dropdown-open]="raffleOpen()" #raffleCombo>
         <span class="verificar-label">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-label__ico lucide-funnel lucide-filter"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-label__ico lucide-funnel lucide-filter"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path></svg>
           Selecciona la rifa
         </span>
         @if (rafflesLoadError) {
           <p class="verificar-inline-error" role="alert">{{ rafflesLoadError }}</p>
         }
         <div class="verificar-select-wrap verificar-combobox">
-          <span class="verificar-select-ticket" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg></span>
+          <span class="verificar-select-ticket" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg></span>
           <div class="verificar-combobox__inner">
             <button
               type="button"
@@ -60,7 +60,7 @@
 
       <label class="verificar-field verificar-field--query">
         <span class="verificar-label">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-label__ico lucide-ticket"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-label__ico lucide-ticket"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
           Teléfono o # de boleto
         </span>
         <div class="verificar-query-row">
@@ -86,7 +86,7 @@
       </label>
 
       <p class="verificar-footnote">
-        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-footnote__ico lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide verificar-footnote__ico lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
         <span>
           Ingrese el <strong class="highlight-blue">teléfono</strong> (10 dígitos), solo números sin espacios ni guiones.
           <br />

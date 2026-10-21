@@ -139,9 +139,31 @@
 }
 
 .verificar-inline-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--err-ink-bg);
+  border: 1px solid var(--err-ink-line);
+  border-radius: var(--r-ctl);
   color: var(--err-ink-text);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.verificar-inline-error::before,
+.verificar-error::before {
+  content: '!';
+  display: inline-grid;
+  flex: 0 0 1.15rem;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--err-ink-text);
+  color: var(--err-ink-bg);
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .verificar-error {
@@ -280,7 +302,7 @@
 .verificar-footnote {
   display: flex;
   gap: 0.55rem;
-  color: var(--on-canvas-muted);
+  color: var(--on-ink-muted);
   font-size: 0.85rem;
 }
 

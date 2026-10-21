@@ -188,7 +188,7 @@ textarea {
 }
 
 .highlight-blue {
-  color: var(--on-ink);
+  color: inherit;
   font-weight: 700;
 }
 

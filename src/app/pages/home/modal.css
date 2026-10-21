@@ -422,9 +422,30 @@
 }
 
 .field__error {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.65rem;
+  background: var(--err-ink-bg);
+  border: 1px solid var(--err-ink-line);
+  border-radius: 8px;
   color: var(--err-ink-text);
   font-size: 0.82rem;
   font-weight: 600;
+}
+
+.field__error::before {
+  content: '!';
+  display: inline-grid;
+  flex: 0 0 1.05rem;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: var(--err-ink-text);
+  color: var(--err-ink-bg);
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
 .field__optional {
