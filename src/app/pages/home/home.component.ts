@@ -11,9 +11,11 @@ import { Category, PrizeNumber, Winner } from '../../core/models/models';
 import { formatWhen } from '../../core/utils/format';
 import { MoneyFormatPipe } from '../../shared/pipes/money-format.pipe';
 import { TurnstileWidgetComponent } from '../../shared/turnstile-widget.component';
-import { VerificarBoletoComponent } from '../verificar/verificar-boleto.component';
 import { PurchaseFlow } from './purchase-flow';
 import { RaffleCardVm, toRaffleCard } from './raffle-card.vm';
+
+const IMAGE_PLACEHOLDER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Crect width='4' height='4' fill='%23141417'/%3E%3Cpath d='M1 1.4h2v1.2H1z' fill='none' stroke='%23c8260c' stroke-width='.1'/%3E%3C/svg%3E";
 
 interface CategoryFilter {
   id: 'todos' | number;
@@ -34,7 +36,7 @@ interface DescriptionModal {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MoneyFormatPipe, VerificarBoletoComponent, FormsModule, NgxsmkTelInputComponent, TurnstileWidgetComponent, RouterLink],
+  imports: [MoneyFormatPipe, FormsModule, NgxsmkTelInputComponent, TurnstileWidgetComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -48,11 +50,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   private static readonly DESC_TWO_PARA_MAX = 500;
 
   readonly year = new Date().getFullYear();
+  readonly instagramUrl = environment.instagramUrl;
   readonly supportWhatsAppUrl = `https://wa.me/${environment.supportWhatsAppE164}`;
 
   // accordions
   howToPlayOpen = false;
-  verifierOpen = false;
 
   // catalog
   categoryFilters: CategoryFilter[] = [{ id: 'todos', label: 'TODOS' }];
@@ -399,21 +401,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.howToPlayOpen = !this.howToPlayOpen;
   }
 
-  toggleVerifier(): void {
-    this.verifierOpen = !this.verifierOpen;
-  }
-
-  scrollToVerifier(): void {
-    this.verifierOpen = true;
-    queueMicrotask(() =>
-      document.getElementById('verificador-boleto')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-    );
-  }
-
-  scrollToRaffles(): void {
-    document.getElementById('rifas-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   // ---- image preview --------------------------------------------------------
 
   openImagePreview(r: RaffleCardVm): void {
@@ -438,6 +425,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.releaseScrollIfIdle();
   }
 
+  /** Swaps a broken photo for an inline placeholder (once, to avoid error loops). */
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img.dataset['fallback']) return;
+    img.dataset['fallback'] = '1';
+    img.src = IMAGE_PLACEHOLDER;
+  }
+
   // ---- WhatsApp help --------------------------------------------------------
 
   openWhatsAppHelpModal(): void {
@@ -451,7 +446,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   confirmWhatsAppSupport(): void {
-    window.open(this.supportWhatsAppUrl, '_blank', 'noopener,noreferrer');
+    const url = new URL(this.supportWhatsAppUrl);
+    if (url.origin === 'https://wa.me') window.open(url.href, '_blank', 'noopener,noreferrer');
     this.closeWhatsAppHelpModal();
   }
 
