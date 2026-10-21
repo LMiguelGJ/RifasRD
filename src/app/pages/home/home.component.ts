@@ -8,7 +8,6 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { RifasApi } from '../../core/api/rifas-api';
 import { Category, PrizeNumber, Winner } from '../../core/models/models';
-import { ThemeService } from '../../core/services/theme.service';
 import { formatWhen } from '../../core/utils/format';
 import { MoneyFormatPipe } from '../../shared/pipes/money-format.pipe';
 import { TurnstileWidgetComponent } from '../../shared/turnstile-widget.component';
@@ -42,7 +41,6 @@ interface DescriptionModal {
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly api = inject(RifasApi);
   private readonly sanitizer = inject(DomSanitizer);
-  protected readonly themeService = inject(ThemeService);
 
   /** Cards switch to a countdown during the last 24 hours before the draw. */
   static readonly DRAW_COUNTDOWN_MAX_MS = 24 * 60 * 60 * 1000;

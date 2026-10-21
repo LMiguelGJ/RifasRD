@@ -69,7 +69,7 @@ type MockState = 'idle' | 'verifying' | 'success';
         border-radius: 4px;
         background: #232323;
         color: #f3f3f3;
-        font: 500 0.82rem/1.2 'Poppins', system-ui, sans-serif;
+        font: 500 0.82rem/1.2 var(--font-sans);
         box-sizing: border-box;
       }
       .ts-mock__check {

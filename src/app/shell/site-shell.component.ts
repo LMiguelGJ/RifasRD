@@ -2,7 +2,6 @@ import { Component, HostListener, OnDestroy, OnInit, inject, signal } from '@ang
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
-import { ThemeService } from '../core/services/theme.service';
 
 /** Anchors on the home page that the header navigation scrolls to. */
 export type ShellAnchor = 'rifas' | 'como-jugar' | 'ganadores';
@@ -15,14 +14,12 @@ export type ShellAnchor = 'rifas' | 'como-jugar' | 'ganadores';
   styleUrl: './site-shell.component.css',
 })
 export class SiteShellComponent implements OnInit, OnDestroy {
-  protected readonly theme = inject(ThemeService);
   private readonly router = inject(Router);
   private navSub?: Subscription;
 
   protected readonly drawerOpen = signal(false);
 
   ngOnInit(): void {
-    this.theme.init();
     this.navSub = this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(() => this.closeDrawer());

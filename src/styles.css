@@ -1,9 +1,7 @@
-/* Poppins, self-hosted so the demo works offline. */
-@import '@fontsource/poppins/latin-300.css';
-@import '@fontsource/poppins/latin-400.css';
-@import '@fontsource/poppins/latin-400-italic.css';
-@import '@fontsource/poppins/latin-500.css';
-@import '@fontsource/poppins/latin-600.css';
-@import '@fontsource/poppins/latin-700.css';
-@import '@fontsource/poppins/latin-ext-400.css';
-@import '@fontsource/poppins/latin-ext-600.css';
+/* Rubik, self-hosted so the demo works offline. */
+@import '@fontsource/rubik/latin-400.css';
+@import '@fontsource/rubik/latin-500.css';
+@import '@fontsource/rubik/latin-700.css';
+@import '@fontsource/rubik/latin-800.css';
+@import '@fontsource/rubik/latin-ext-500.css';
+@import '@fontsource/rubik/latin-ext-700.css';

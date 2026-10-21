@@ -1,0 +1,56 @@
+/*
+ * Design tokens for the Rev-style restyle.
+ * Two surfaces: the light canvas and black "ink" cards. Red fills carry white
+ * text and are never used as text colour. Gold marks urgency and winners.
+ */
+:root {
+  --font-sans: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Canvas (page) */
+  --canvas: #f1f1ef;
+  --canvas-line: #d9d9d4;
+  --on-canvas: #101012;
+  --on-canvas-muted: #55555c;
+
+  /* Ink (cards, bars, sheets) */
+  --ink: #0a0a0b;
+  --ink-2: #141417;
+  --ink-3: #1e1e22;
+  --ink-line: rgba(255, 255, 255, 0.14);
+  --ink-line-strong: rgba(255, 255, 255, 0.3);
+  --on-ink: #f6f6f7;
+  --on-ink-muted: #b7b7bf;
+
+  /* Action red (fill behind white text) */
+  --red: #c8260c;
+  --red-hover: #e02d10;
+  --red-deep: #8f1a06;
+  --on-red: #ffffff;
+
+  /* Urgency gold (on ink, or as a fill with black text) */
+  --gold: #facc3b;
+  --gold-deep: #b89320;
+  --on-gold: #111111;
+
+  /* Status */
+  --ok: #1d7a46;
+  --ok-on-ink: #7fdba6;
+  --err-bg: #fdebe7;
+  --err-text: #7a1205;
+  --err-line: #e07763;
+  --err-ink-bg: #2b100b;
+  --err-ink-text: #ffb9ac;
+  --err-ink-line: #ff8d7a;
+
+  /* Shape and depth */
+  --r-card: 14px;
+  --r-ctl: 10px;
+  --r-pill: 999px;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 14px 28px -16px rgba(0, 0, 0, 0.6);
+  --shadow-sheet: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
+
+  /* Layout */
+  --tap: 44px;
+  --container: 1360px;
+  --gutter: clamp(0.75rem, 3vw, 1.5rem);
+}
