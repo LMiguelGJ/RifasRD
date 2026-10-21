@@ -162,14 +162,6 @@ textarea {
   background: var(--err-ink-bg);
 }
 
-.iti__dropdown-content {
-  color: var(--on-ink);
-}
-
-.iti__selected-dial-code {
-  color: var(--on-ink);
-}
-
 .phone-sel .iti__search-input,
 .iti__country-list .iti__search-input {
   min-height: var(--tap);
@@ -208,4 +200,12 @@ textarea {
 .rifa-wrap {
   position: relative;
   z-index: 2;
+}
+
+.iti__dropdown-content {
+  color: var(--on-ink);
+}
+
+.iti__selected-dial-code {
+  color: var(--on-ink);
 }
