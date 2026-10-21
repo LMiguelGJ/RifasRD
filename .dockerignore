@@ -1,0 +1,14 @@
+# Keep the build context small and the lab material out of any public image.
+node_modules
+dist
+.angular
+.git
+.playwright-mcp
+.firecrawl
+.atl
+research
+.lab
+odd
+PLAN.md
+public/demo/rev
+*.log
