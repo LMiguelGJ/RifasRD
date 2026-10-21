@@ -19,6 +19,7 @@ const raffle: RaffleCardVm = {
   showAvailableTickets: false,
   ticketsAvailableCount: 500,
   drawAtIso: null,
+  urgency: null,
 };
 
 const combo = (id: number, quantity: number, price: string): TicketCombo => ({

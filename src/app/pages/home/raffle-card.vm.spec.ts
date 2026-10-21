@@ -60,6 +60,37 @@ describe('toRaffleCard', () => {
     expect(pending.timelineKind).toBeUndefined();
   });
 
+  it('maps technology and watch categories to their own badge variants', () => {
+    expect(toRaffleCard(base({ category: { id: 2, name: 'Tecnología', slug: 'tecnologia' } })).badge.variant).toBe('tech');
+    expect(toRaffleCard(base({ category: { id: 3, name: 'Relojes', slug: 'relojes' } })).badge.variant).toBe('reloj');
+  });
+
+  it('keeps an untouched raffle open with an empty progress bar', () => {
+    const vm = toRaffleCard(base());
+    expect(vm.progress).toBe(0);
+    expect(vm.soldOut).toBeFalse();
+  });
+
+  describe('urgency', () => {
+    const now = Date.parse('2026-10-21T12:00:00.000Z');
+    const inHours = (h: number) => new Date(now + h * 3_600_000).toISOString();
+
+    it('is "today" when the draw is less than 24 hours away', () => {
+      expect(toRaffleCard(base({ draw_at: inHours(5) }), now).urgency).toBe('today');
+    });
+
+    it('is "soon" when the draw is between 24 and 72 hours away', () => {
+      expect(toRaffleCard(base({ draw_at: inHours(30) }), now).urgency).toBe('soon');
+    });
+
+    it('is null without a draw date, with a far one, with a past one or when sold out', () => {
+      expect(toRaffleCard(base(), now).urgency).toBeNull();
+      expect(toRaffleCard(base({ draw_at: inHours(200) }), now).urgency).toBeNull();
+      expect(toRaffleCard(base({ draw_at: inHours(-3) }), now).urgency).toBeNull();
+      expect(toRaffleCard(base({ draw_at: inHours(5), tickets_available_count: 0 }), now).urgency).toBeNull();
+    });
+  });
+
   it('never lets the maximum per user fall below the minimum', () => {
     const vm = toRaffleCard(base({ min_tickets_per_user: 5, max_tickets_per_user: 2 }));
     expect(vm.minTickets).toBe(5);

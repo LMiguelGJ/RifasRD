@@ -200,7 +200,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const categoryId = this.selectedCatalogCategory === 'todos' ? undefined : this.selectedCatalogCategory;
     this.api.getRaffles({ categoryId, perPage: 50 }).subscribe({
       next: page => {
-        const cards = page.data.map(toRaffleCard);
+        const cards = page.data.map(r => toRaffleCard(r));
         this.raffles = cards;
         this.loadPrizeBoards(cards);
         this.rafflesLoading = false;

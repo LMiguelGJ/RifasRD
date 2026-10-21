@@ -1,7 +1,8 @@
 import { Raffle } from '../../core/models/models';
 import { foldText, formatDrawDetail } from '../../core/utils/format';
 
-export type BadgeVariant = 'tech' | 'efectivo' | 'velocidad' | 'premium';
+export type BadgeVariant = 'tech' | 'efectivo' | 'velocidad' | 'premium' | 'reloj';
+export type Urgency = 'today' | 'soon';
 export type TimelineKind = 'sorteo' | 'cierre';
 
 /** View model of one catalog card, derived from the API `Raffle`. */
@@ -24,7 +25,11 @@ export interface RaffleCardVm {
   ticketsAvailableCount: number;
   drawAtIso: string | null;
   timelineKind?: TimelineKind;
+  /** How close the draw is, or null when there is no draw date, it is far, past, or the raffle is sold out. */
+  urgency: Urgency | null;
 }
+
+const HOUR_MS = 3_600_000;
 
 const CLOSED_STATUSES = new Set([
   'completed', 'closed', 'cancelled', 'canceled', 'finished', 'ended', 'drawn', 'sold_out', 'inactive',
@@ -32,7 +37,8 @@ const CLOSED_STATUSES = new Set([
 
 function badgeVariant(slug: string, name: string): BadgeVariant {
   const t = foldText(`${slug} ${name}`);
-  if (t.includes('telef') || t.includes('phone') || t.includes('tech') || t.includes('ipad')) return 'tech';
+  if (t.includes('reloj') || t.includes('watch')) return 'reloj';
+  if (t.includes('telef') || t.includes('phone') || t.includes('tech') || t.includes('tecnolog') || t.includes('ipad')) return 'tech';
   if (t.includes('efectiv') || t.includes('cash') || t.includes('dinero')) return 'efectivo';
   if (t.includes('moto') || t.includes('atv') || t.includes('can-am')) return 'velocidad';
   return 'premium';
@@ -60,13 +66,22 @@ function isSoldOut(r: Raffle, available: number): boolean {
   return CLOSED_STATUSES.has(status) || (status !== '' && !open) || available <= 0;
 }
 
-export function toRaffleCard(r: Raffle): RaffleCardVm {
+function urgencyOf(kind: TimelineKind | undefined, iso: string | null, soldOut: boolean, now: number): Urgency | null {
+  if (kind !== 'sorteo' || !iso || soldOut) return null;
+  const hoursLeft = (new Date(iso).getTime() - now) / HOUR_MS;
+  if (hoursLeft < 0) return null;
+  if (hoursLeft < 24) return 'today';
+  return hoursLeft < 72 ? 'soon' : null;
+}
+
+export function toRaffleCard(r: Raffle, now: number = Date.now()): RaffleCardVm {
   const goal = r.ticket_goal > 0 ? r.ticket_goal : 1;
   const available = Math.max(0, r.tickets_available_count ?? 0);
   const sold = Math.min(goal, Math.max(0, goal - available));
   const progress = Math.min(100, Math.round((sold / goal) * 100));
   const category = r.category?.name ?? 'Rifa';
   const { iso, kind } = timeline(r);
+  const soldOut = isSoldOut(r, available);
   return {
     id: String(r.id),
     raffleType: r.type === 'premiados' ? 'premiados' : 'standard',
@@ -80,10 +95,11 @@ export function toRaffleCard(r: Raffle): RaffleCardVm {
     unitPrice: Number.parseFloat(r.ticket_price) || 0,
     minTickets: Math.max(1, r.min_tickets_per_user),
     maxTicketsPerUser: Math.max(r.min_tickets_per_user, r.max_tickets_per_user),
-    soldOut: isSoldOut(r, available),
+    soldOut,
     showAvailableTickets: !!r.show_available_tickets,
     ticketsAvailableCount: available,
     drawAtIso: iso,
     ...(iso ? { timelineKind: kind } : {}),
+    urgency: urgencyOf(kind, iso, soldOut, now),
   };
 }

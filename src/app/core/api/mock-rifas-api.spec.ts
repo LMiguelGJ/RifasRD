@@ -3,6 +3,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 
 import { CreateOrderRequest, CreatedOrder, LookupResult, PublicOrder } from '../models/models';
+import { MOCK_RAFFLES } from './mock-data';
 import { MOCK_VALIDATION_DELAY_MS, MockRifasApi } from './mock-rifas-api';
 
 const STORAGE_KEY = 'rifas-demo-orders';
@@ -39,14 +40,30 @@ describe('MockRifasApi', () => {
   afterEach(() => localStorage.removeItem(STORAGE_KEY));
 
   it('serves the catalog, categories, prize numbers, winners and banks', fakeAsync(() => {
-    expect(run(api.getRaffles({ perPage: 50 })).value?.data.length).toBe(2);
-    expect(run(api.getRaffles({ categoryId: 1 })).value?.data.map(r => r.id)).toEqual([HONDA]);
-    expect(run(api.getCategories()).value?.length).toBe(3);
+    expect(run(api.getRaffles({ perPage: 50 })).value?.data.length).toBe(12);
+    const vehicles = run(api.getRaffles({ categoryId: 1, perPage: 50 })).value?.data.map(r => r.id);
+    expect(vehicles?.length).toBe(6);
+    expect(vehicles).toContain(HONDA);
+    expect(run(api.getCategories()).value?.map(c => c.name)).toEqual(['Vehículos', 'Tecnología', 'Relojes', 'Dinero']);
     expect(run(api.getPrizeNumbers(HONDA)).value?.length).toBeGreaterThan(0);
     expect(run(api.getPrizeNumbers(22)).value).toEqual([]);
     expect(run(api.getRecentWinners(5)).value?.length).toBe(5);
     expect(run(api.getBankAccounts()).value?.every(b => b.account_number.startsWith('0000'))).toBeTrue();
   }));
+
+  it('keeps the demo catalog consistent with the business rules', () => {
+    expect(MOCK_RAFFLES.length).toBe(12);
+    for (const r of MOCK_RAFFLES) {
+      const soldShare = (r.ticket_goal - r.tickets_available_count) / r.ticket_goal;
+      if (r.draw_at) expect(soldShare).toBeGreaterThanOrEqual(0.8, `${r.title}: draw date before 80% sold`);
+      for (const c of r.ticket_combos) {
+        expect(c.quantity).toBeGreaterThanOrEqual(r.min_tickets_per_user);
+        expect(c.quantity).toBeLessThanOrEqual(r.max_tickets_per_user);
+      }
+    }
+    expect(MOCK_RAFFLES.some(r => r.tickets_available_count === 0)).toBeTrue();
+    expect(MOCK_RAFFLES.some(r => r.tickets_available_count === r.ticket_goal)).toBeTrue();
+  });
 
   it('registers an order as pending validation with a personal link', fakeAsync(() => {
     const created = run<CreatedOrder>(api.createOrder(HONDA, request(), voucher())).value!;

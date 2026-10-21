@@ -1,29 +1,11 @@
 /* eslint-disable */
 // GENERATED from the reference capture by tools/gen-mock. Edit freely: this is demo data.
-import { BankAccount, Category, PrizeNumber, Raffle, Winner } from '../models/models';
+import { BankAccount, PrizeNumber, Raffle, Winner } from '../models/models';
+import { DEMO_RAFFLES } from './mock-raffles-extra';
 
-export const MOCK_CATEGORIES: Category[] = [
-  {
-    "id": 5,
-    "name": "Dinero",
-    "slug": "Dinero",
-    "sort_order": 0
-  },
-  {
-    "id": 2,
-    "name": "Telefono",
-    "slug": "Teléfonos",
-    "sort_order": 0
-  },
-  {
-    "id": 1,
-    "name": "Vehículos",
-    "slug": "vehiculo",
-    "sort_order": 10
-  }
-];
+export { MOCK_CATEGORIES } from './mock-categories';
 
-export const MOCK_RAFFLES: Raffle[] = [
+const BASE_RAFFLES: Raffle[] = [
   {
     "id": 22,
     "category_id": 2,
@@ -47,8 +29,8 @@ export const MOCK_RAFFLES: Raffle[] = [
     "tickets_available_count": 45379,
     "category": {
       "id": 2,
-      "name": "Telefono",
-      "slug": "Teléfonos"
+      "name": "Tecnología",
+      "slug": "tecnologia"
     },
     "image": {
       "id": 63464,
@@ -232,6 +214,11 @@ export const MOCK_RAFFLES: Raffle[] = [
     ]
   }
 ] as Raffle[];
+
+/** Display order of the catalog: the grid mixes categories and urgency states. */
+const CATALOG_ORDER = [31, 32, 37, 36, 22, 33, 20, 38, 34, 39, 35, 40];
+const ALL_RAFFLES: Raffle[] = [...BASE_RAFFLES, ...DEMO_RAFFLES];
+export const MOCK_RAFFLES: Raffle[] = CATALOG_ORDER.map(id => ALL_RAFFLES.find(r => r.id === id)!);
 
 export const MOCK_PRIZE_NUMBERS: Record<number, PrizeNumber[]> = {
   "20": [
