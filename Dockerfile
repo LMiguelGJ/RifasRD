@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Rifas Luxury RD — static Angular demo for Dokploy.
-# Build: docker build -t rifasrd .   ->   Run: docker run -p 8080:80 rifasrd
+# Build: docker build -t rifasrd .   ->   Run: docker run -p 8080:8080 rifasrd
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -16,6 +16,9 @@ COPY --from=build /app/dist/rifas-luxury-demo/browser /usr/share/nginx/html
 # personal order links are client-side routes and must resolve to index.html.
 COPY <<'EOF' /etc/nginx/conf.d/default.conf
 server {
+  # 8080 is what Dokploy's domain routes to (its "Port" field = container port);
+  # 80 stays open as a fallback for generic port-80 routing.
+  listen 8080;
   listen 80;
   server_name _;
   root /usr/share/nginx/html;
@@ -35,5 +38,5 @@ server {
 }
 EOF
 
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost/ >/dev/null || exit 1
+EXPOSE 8080 80
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:8080/ >/dev/null || exit 1
