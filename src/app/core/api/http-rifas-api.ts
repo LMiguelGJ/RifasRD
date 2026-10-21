@@ -133,8 +133,10 @@ function unwrapOrder(raw: unknown): CreatedOrder {
     }
     return undefined;
   };
+  // SAFETY: `order` is the JSON body matching the backend contract (docs/BACKEND-HANDOVER.md); the cast only narrows it to CreatedOrder and `pick(...)` below normalizes every field the UI reads.
+  const contractBody = order as unknown as CreatedOrder;
   return {
-    ...(order as unknown as CreatedOrder),
+    ...contractBody,
     public_view_token: pick('public_view_token', 'publicViewToken', 'view_token') ?? '',
     customer_slug: pick('customer_slug', 'customerSlug') ?? '',
     public_view_url: pick('public_view_url', 'publicViewUrl'),
