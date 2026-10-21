@@ -2,6 +2,8 @@ import { Component, HostListener, OnDestroy, OnInit, inject, signal } from '@ang
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 
 /** Anchors on the home page that the header navigation scrolls to. */
 export type ShellAnchor = 'rifas' | 'como-jugar' | 'ganadores';
@@ -14,6 +16,7 @@ export type ShellAnchor = 'rifas' | 'como-jugar' | 'ganadores';
   styleUrl: './site-shell.component.css',
 })
 export class SiteShellComponent implements OnInit, OnDestroy {
+  protected readonly instagramUrl = environment.instagramUrl;
   private readonly router = inject(Router);
   private navSub?: Subscription;
 

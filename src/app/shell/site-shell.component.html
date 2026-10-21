@@ -1,64 +1,50 @@
-<div class="page-bg" aria-hidden="true"></div>
 <div class="shell-wrap" [class.shell-wrap--drawer-open]="drawerOpen()">
-  <header class="site-header">
-    <div class="container header-inner">
+  <div class="ribbon">
+    <a class="ribbon__link" [href]="instagramUrl" target="_blank" rel="noopener noreferrer">
+      Sorteos en vivo por Instagram
+    </a>
+  </div>
+
+  <header class="bar">
+    <div class="container bar__inner">
       <button
         type="button"
         id="site-drawer-open-btn"
-        class="nav-drawer-toggle"
+        class="bar__menu"
         aria-controls="site-drawer-nav"
         [attr.aria-expanded]="drawerOpen()"
         (click)="toggleDrawer()"
       >
         @if (drawerOpen()) {
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide nav-drawer-toggle__icon lucide-x"><!----><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path><!----></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
         } @else {
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lucide nav-drawer-toggle__icon lucide-menu"><!----><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path><!----></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
         }
         <span class="sr-only">{{ drawerOpen() ? 'Cerrar menú' : 'Abrir menú' }}</span>
       </button>
+
       <a routerLink="/" class="brand" aria-label="Rifas Luxury RD — inicio" (click)="closeDrawer()">
-        <span class="brand__frame">
-          <img src="/Logo_rifa.png" width="160" height="56" alt="Rifas Luxury RD" class="brand__img" />
-        </span>
+        <img src="/Logo_rifa.png" width="160" height="56" alt="Rifas Luxury RD" class="brand__img" />
       </a>
-      <nav class="header-nav header-nav--desktop" aria-label="Principal">
-        <button type="button" class="link-ghost" (click)="goTo('rifas')">Rifas</button>
-        <button type="button" class="link-ghost" (click)="goTo('como-jugar')">Cómo jugar</button>
-        <button type="button" class="link-ghost" (click)="goTo('ganadores')">Ganadores</button>
-        <a
-          routerLink="/verificar"
-          routerLinkActive="verify-nav-link--active"
-          class="verify-nav-link"
-          aria-label="Verificar boleto"
-        ><span class="verify-nav-link__text">Verificar boleto</span></a>
+
+      <nav class="bar__nav" aria-label="Principal">
+        <button type="button" class="bar__link" (click)="goTo('rifas')">Rifas</button>
+        <button type="button" class="bar__link" (click)="goTo('como-jugar')">Cómo jugar</button>
+        <button type="button" class="bar__link" (click)="goTo('ganadores')">Ganadores</button>
+        <a routerLink="/verificar" routerLinkActive="bar__verify--active" class="bar__verify" aria-label="Verificar boleto">Verificar boleto</a>
       </nav>
     </div>
   </header>
-  <div
-    class="nav-drawer-backdrop"
-    [class.nav-drawer-backdrop--visible]="drawerOpen()"
-    aria-hidden="true"
-    (click)="closeDrawer()"
-  ></div>
-  <aside
-    id="site-mobile-drawer"
-    class="nav-drawer"
-    [class.nav-drawer--open]="drawerOpen()"
-    [attr.aria-hidden]="!drawerOpen()"
-  >
-    <nav id="site-drawer-nav" class="nav-drawer__nav" aria-label="Principal">
-      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('rifas')">Rifas</button>
-      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('como-jugar')">Cómo jugar</button>
-      <button type="button" class="link-ghost nav-drawer__link" (click)="goTo('ganadores')">Ganadores</button>
-      <a
-        routerLink="/verificar"
-        routerLinkActive="verify-nav-link--active"
-        class="verify-nav-link nav-drawer__verify"
-        aria-label="Verificar boleto"
-        (click)="closeDrawer()"
-      ><span class="verify-nav-link__text">Verificar boleto</span></a>
+
+  <div class="drawer-backdrop" [class.drawer-backdrop--visible]="drawerOpen()" aria-hidden="true" (click)="closeDrawer()"></div>
+  <aside id="site-mobile-drawer" class="drawer" [class.drawer--open]="drawerOpen()" [attr.aria-hidden]="!drawerOpen()">
+    <nav id="site-drawer-nav" class="drawer__nav" aria-label="Principal">
+      <button type="button" class="drawer__link" (click)="goTo('rifas')">Rifas</button>
+      <button type="button" class="drawer__link" (click)="goTo('como-jugar')">Cómo jugar</button>
+      <button type="button" class="drawer__link" (click)="goTo('ganadores')">Ganadores</button>
+      <a routerLink="/verificar" routerLinkActive="drawer__link--active" class="drawer__link" aria-label="Verificar boleto" (click)="closeDrawer()">Verificar boleto</a>
     </nav>
   </aside>
+
   <router-outlet />
 </div>
