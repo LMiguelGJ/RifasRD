@@ -20,9 +20,12 @@ pnpm-debug.log*
 # Research and lab material (never upload)
 /research/
 /.lab/
-/public/demo/rev/
 /.firecrawl/
 /.playwright-mcp/
+
+# Ship demo catalog photos, overriding legacy local lab exclusions.
+!/public/demo/rev/
+!/public/demo/rev/*.webp
 
 # Internal working docs (local only)
 /PLAN.md

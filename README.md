@@ -41,10 +41,10 @@ The 12 catalog raffles, their prices, ticket counts and sold percentages are
 the catalog, winners or banks.
 
 **Photo provenance.** The raffle photos come from a competitor website
-(revcomps.com) and were captured for internal lab reference only. They live in
-`public/demo/rev/` (converted webp, git-excluded) and `.lab/revcomps/` (originals and
-listing data, also git-excluded). They carry that site's branding and must be
-**replaced with the client's own photos before any public deployment**. The original
+(revcomps.com). The ten converted WebP files in `public/demo/rev/` ship with
+this demo so the catalog works in Docker deployments. Originals and research in
+`.lab/revcomps/` remain excluded. These reference photos carry that site's branding;
+**replace them with the client's own or licensed photos before commercial use**. The original
 site's own assets in `public/demo/raffles/` are used here with the owner's
 authorization.
 
@@ -86,7 +86,7 @@ and the three-step switch (`useMock: false`).
 
 The build is a static folder. Host it anywhere that serves `index.html` for unknown paths
 (single-page-app fallback). `public/_redirects` already does this for Netlify and Cloudflare Pages.
-Replace the lab photos in `public/demo/rev/` before deploying publicly.
+Demo catalog photos in `public/demo/rev/` are included in Git and Docker builds.
 
 ## Notes
 

@@ -3,8 +3,8 @@ import { MOCK_CATEGORIES } from './mock-categories';
 
 /**
  * Example raffles added for the Rev restyle demo. Titles, prices and sold
- * percentages are invented demo data. Photos live in `public/demo/rev/`, which is
- * git-excluded lab material (see README) and must be replaced before a public deploy.
+ * percentages are invented demo data. Demo photos in `public/demo/rev/` ship with
+ * the app; see README for provenance and replacement requirements.
  */
 interface DemoRaffleSpec {
   id: number;
