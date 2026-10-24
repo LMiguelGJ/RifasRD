@@ -11,10 +11,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $password = env('ADMIN_PASSWORD');
+        $email = config('rifas.admin.email');
+        $password = config('rifas.admin.password');
 
         $user = User::firstOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@rifasrd.local')],
+            ['email' => $email],
             [
                 'name' => 'Admin',
                 'role' => 'admin',
@@ -22,10 +23,22 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // The configured admin always ends up as admin, even when the row
+        // pre-dates the role column (migration default is 'operator').
+        $changes = [];
+
+        if ($user->role !== 'admin') {
+            $changes['role'] = 'admin';
+        }
+
         // Only rotate the password when one is explicitly configured, so a
         // reboot never locks the operator out of the panel.
         if ($password) {
-            $user->update(['password' => Hash::make($password)]);
+            $changes['password'] = $password;
+        }
+
+        if ($changes !== []) {
+            $user->update($changes);
         }
 
         $this->call(CatalogSeeder::class);
