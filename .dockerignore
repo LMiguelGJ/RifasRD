@@ -14,3 +14,7 @@ backend/vendor
 backend/node_modules
 backend/.env
 *.log
+backend/bootstrap/cache/*.php
+backend/database/*.sqlite
+backend/storage/logs/*
+backend/storage/app/private/*
