@@ -3,7 +3,7 @@
 /tmp
 /out-tsc
 /bazel-out
-/.angular/cache
+/.angular
 .sass-cache/
 /connect.lock
 /coverage
@@ -30,6 +30,7 @@ pnpm-debug.log*
 # Internal working docs (local only)
 /PLAN.md
 /odd/
+/.pi/
 
 # Tooling caches
 /.atl/

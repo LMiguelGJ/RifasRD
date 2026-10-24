@@ -10,4 +10,7 @@ research
 .lab
 odd
 PLAN.md
+backend/vendor
+backend/node_modules
+backend/.env
 *.log
