@@ -191,5 +191,7 @@ EOF
 RUN chmod +x /entrypoint.sh /migrate.sh
 
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://127.0.0.1:8080/healthz >/dev/null || exit 1
+# start-period matters: Postgres init + migrate + seed happen before /healthz
+# can go 200; without it Swarm rolls back to the old task while booting.
+HEALTHCHECK --interval=10s --timeout=5s --start-period=90s --retries=6 CMD wget -qO- http://127.0.0.1:8080/healthz >/dev/null || exit 1
 ENTRYPOINT ["/entrypoint.sh"]
