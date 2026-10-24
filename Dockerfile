@@ -136,6 +136,7 @@ su postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='${DBU}'\"" | gr
   su postgres -c "psql -qc \"CREATE ROLE \\\"${DBU}\\\" LOGIN PASSWORD '${DBP}'\""
 su postgres -c "psql -tc \"SELECT 1 FROM pg_database WHERE datname='${DBD}'\"" | grep -q 1 || \
   su postgres -c "createdb -O \"${DBU}\" \"${DBD}\""
+php artisan package:discover --ansi || true
 php artisan migrate --force
 php artisan db:seed --force || true
 php artisan storage:link || true
@@ -145,10 +146,35 @@ php artisan view:cache
 echo "migrate: done"
 EOF
 
-# Entrypoint: init Postgres cluster on first boot, then supervisord runs everything.
+# Entrypoint: stable secrets, init Postgres cluster on first boot, then supervisord.
 COPY <<'EOF' /entrypoint.sh
 #!/bin/sh
 set -e
+
+# Database password is generated once and persisted beside the data volume so
+# reboots never orphan the role. Postgres only listens on 127.0.0.1 in-container.
+PWF=/var/lib/postgresql/.dbpass
+if [ -z "$DB_PASSWORD" ]; then
+  if [ -f "$PWF" ]; then
+    DB_PASSWORD=$(cat "$PWF")
+  else
+    DB_PASSWORD=$(head -c 24 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24)
+    printf '%s' "$DB_PASSWORD" > "$PWF"
+  fi
+  export DB_PASSWORD
+fi
+
+# APP_KEY may be provided by the platform; otherwise derive one persisted in
+# storage (sessions reset only if the storage volume is wiped).
+if [ -z "$APP_KEY" ]; then
+  if [ -f /var/www/html/storage/.app_key ]; then
+    export APP_KEY=$(cat /var/www/html/storage/.app_key)
+  else
+    export APP_KEY=$(php /var/www/html/artisan key:generate --show --no-ansi)
+    printf '%s' "$APP_KEY" > /var/www/html/storage/.app_key
+  fi
+fi
+
 PGDATA=/var/lib/postgresql/15/main
 if [ ! -f "$PGDATA/PG_VERSION" ]; then
   mkdir -p "$PGDATA"
