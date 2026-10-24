@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRaffle extends CreateRecord
 {
     protected static string $resource = RaffleResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return RaffleResource::bindBanner($data);
+    }
 }

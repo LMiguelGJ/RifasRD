@@ -3,11 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Enums\RaffleStatus;
+use Closure;
 use App\Filament\Resources\RaffleResource\Pages;
 use App\Models\Image;
 use App\Models\Raffle;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -52,7 +54,15 @@ class RaffleResource extends Resource
                 ])->required(),
                 Forms\Components\DateTimePicker::make('starts_at')->label('Inicio'),
                 Forms\Components\DateTimePicker::make('draw_at')->label('Fecha de sorteo')
-                    ->helperText('Solo se acepta con el 80% de los boletos vendidos.'),
+                    ->helperText('Solo se acepta con el 80% de los boletos vendidos.')
+                    ->rule(fn (Get $get, ?Raffle $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get, $record): void {
+                        $goal = (int) $get('ticket_goal');
+                        $sold = (int) ($record?->tickets_sold_count ?? 0);
+
+                        if ($goal > 0 && $sold < (int) ceil($goal * 0.8)) {
+                            $fail('La fecha del sorteo solo se acepta cuando se ha vendido el 80% de los boletos.');
+                        }
+                    }),
             ])->columns(3),
             Forms\Components\Section::make('Paquetes')->schema([
                 Forms\Components\Repeater::make('ticketCombos')->label('')
@@ -86,12 +96,7 @@ class RaffleResource extends Resource
                 Tables\Columns\TextColumn::make('tickets_sold_count')->label('Vendidos')->sortable(),
                 Tables\Columns\TextColumn::make('tickets_available_count')->label('Disponibles'),
                 Tables\Columns\TextColumn::make('draw_at')->label('Sorteo')->dateTime('d/m/Y H:i')->placeholder('—'),
-                Tables\Columns\TextColumn::make('status')->label('Estado')->badge()->color(fn (string $state): string => match ($state) {
-                    RaffleStatus::Active->value => 'success',
-                    RaffleStatus::Draft->value => 'gray',
-                    RaffleStatus::Paused->value => 'warning',
-                    default => 'danger',
-                }),
+                Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Estado')->options([
@@ -116,25 +121,11 @@ class RaffleResource extends Resource
         ];
     }
 
-    /** Store the upload as an Image row and bind it to the raffle. */
-    public static function mutateFormDataBeforeCreate(array $data): array
-    {
-        return static::bindBanner($data);
-    }
-
-    public static function mutateFormDataBeforeSave(array $data): array
-    {
-        return static::bindBanner($data);
-    }
-
-    public static function mutateFormDataBeforeFill(array $data): array
-    {
-        unset($data['banner']);
-
-        return $data;
-    }
-
-    private static function bindBanner(array $data): array
+    /**
+     * Store the upload as an Image row and bind it to the raffle. Called from the
+     * create/edit pages (Filament only invokes mutateFormData* hooks on pages).
+     */
+    public static function bindBanner(array $data): array
     {
         $path = $data['banner'] ?? null;
 

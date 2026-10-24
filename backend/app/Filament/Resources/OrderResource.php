@@ -66,28 +66,16 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('total_amount')->label('Total')->money('DOP', true)->sortable(),
                 Tables\Columns\TextColumn::make('bankAccount.bank_name')->label('Banco')->toggleable(),
                 Tables\Columns\TextColumn::make('phone')->label('Teléfono')->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('status')->label('Estado')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        OrderStatus::PendingValidation->value => 'Pendiente de validación',
-                        OrderStatus::Validated->value => 'Validado',
-                        OrderStatus::Cancelled->value => 'Cancelado',
-                        default => $state,
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        OrderStatus::PendingValidation->value => 'warning',
-                        OrderStatus::Validated->value => 'success',
-                        OrderStatus::Cancelled->value => 'danger',
-                        default => 'gray',
-                    }),
+                // OrderStatus provides label and colour (HasLabel/HasColor), so no closures.
+                Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
                 Tables\Columns\TextColumn::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i')->sortable()->toggleable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Estado')
                     ->options([
-                        OrderStatus::PendingValidation->value => 'Pendientes de validación',
-                        OrderStatus::Validated->value => 'Validados',
-                        OrderStatus::Cancelled->value => 'Cancelados',
+                        OrderStatus::PendingValidation->value => OrderStatus::PendingValidation->getLabel(),
+                        OrderStatus::Validated->value => OrderStatus::Validated->getLabel(),
+                        OrderStatus::Cancelled->value => OrderStatus::Cancelled->getLabel(),
                     ])
                     ->default(OrderStatus::PendingValidation->value),
                 Tables\Filters\SelectFilter::make('raffle_id')->label('Rifa')

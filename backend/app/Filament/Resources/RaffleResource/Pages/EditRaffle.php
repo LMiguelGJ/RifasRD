@@ -10,6 +10,11 @@ class EditRaffle extends EditRecord
 {
     protected static string $resource = RaffleResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return RaffleResource::bindBanner($data);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
