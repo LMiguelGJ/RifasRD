@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\TicketResource\Pages;
+use App\Models\Ticket;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class TicketResource extends Resource
+{
+    protected static ?string $model = Ticket::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-hashtag';
+
+    protected static ?string $navigationLabel = 'Boletos';
+
+    protected static ?string $modelLabel = 'boleto';
+
+    protected static ?string $pluralModelLabel = 'boletos';
+
+    protected static ?int $navigationSort = 3;
+
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Forms\Components\TextInput::make('number')->label('Número')->required(),
+            Forms\Components\Select::make('raffle_id')->label('Rifa')->relationship('raffle', 'title')->required(),
+            Forms\Components\Select::make('status')->label('Estado')->options([
+                'validated' => 'Validado',
+                'sold' => 'Vendido',
+                'cancelled' => 'Cancelado',
+            ])->required(),
+        ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->defaultSort('id', 'desc')
+            ->columns([
+                Tables\Columns\TextColumn::make('number')->label('Número')->searchable()->copyable(),
+                Tables\Columns\TextColumn::make('raffle.title')->label('Rifa')->limit(30)->toggleable(),
+                Tables\Columns\TextColumn::make('order.id')->label('Pedido #')->sortable()->toggleable(),
+                Tables\Columns\TextColumn::make('order.customer_name')->label('Cliente')->limit(20)->toggleable(),
+                Tables\Columns\TextColumn::make('order.phone')->label('Teléfono')->searchable(),
+                Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
+            ])
+            ->filters([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListTickets::route('/'),
+            'edit' => Pages\EditTicket::route('/{record}/edit'),
+        ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+}

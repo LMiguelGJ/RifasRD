@@ -36,6 +36,22 @@ class Raffle extends Model
 
     protected $appends = ['tickets_available_count', 'banner_image'];
 
+    protected static function booted(): void
+    {
+        // Business rule: the draw date is only settable once 80% of the goal is sold.
+        static::saving(function (Raffle $raffle) {
+            if ($raffle->draw_at !== null && $raffle->ticket_goal > 0) {
+                $sold = (int) $raffle->tickets_sold_count;
+
+                if ($sold < (int) ceil($raffle->ticket_goal * 0.8)) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'draw_at' => ['The draw date can only be set after 80% of tickets are sold.'],
+                    ]);
+                }
+            }
+        });
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
