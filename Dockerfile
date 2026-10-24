@@ -186,6 +186,13 @@ if [ -z "$APP_KEY" ]; then
   fi
 fi
 
+# Persistent volumes can arrive empty and root-owned. Make the writable app
+# paths usable on every boot (vouchers are uploaded by php-fpm as www-data).
+# Not a blanket chown of storage/: .app_key must stay root-only.
+mkdir -p /var/www/html/storage/app/private/vouchers
+chown -R www-data:www-data /var/www/html/storage/app /var/www/html/storage/logs /var/www/html/storage/framework
+chmod -R u+rwX,g+rwX,o-rwx /var/www/html/storage/app /var/www/html/storage/logs /var/www/html/storage/framework
+
 if [ ! -f "$PGDATA/PG_VERSION" ]; then
   mkdir -p "$PGDATA"
   chown -R postgres:postgres /var/lib/postgresql
