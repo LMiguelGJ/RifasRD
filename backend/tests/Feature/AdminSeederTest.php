@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\BankAccount;
+use App\Models\Raffle;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,5 +55,31 @@ class AdminSeederTest extends TestCase
         $this->seed(DatabaseSeeder::class);
 
         $this->assertTrue(Hash::check('New-pass-789', User::where('email', 'boss@rifasrd.test')->value('password')));
+    }
+    public function test_the_first_run_seeds_the_demo_catalog(): void
+    {
+        config(['rifas.admin.email' => 'boss@rifasrd.test', 'rifas.admin.password' => null]);
+
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(12, Raffle::count());
+        $this->assertSame(7, BankAccount::count());
+    }
+
+    public function test_a_later_boot_never_overwrites_catalog_data_edited_in_the_panel(): void
+    {
+        config(['rifas.admin.email' => 'boss@rifasrd.test', 'rifas.admin.password' => null]);
+        $this->seed(DatabaseSeeder::class);
+
+        Raffle::where('id', 35)->update(['title' => 'Editada por el operador', 'tickets_sold_count' => 777]);
+        BankAccount::query()->update(['account_holder_name' => 'Titular Real']);
+        Raffle::where('id', 31)->delete();
+
+        $this->seed(DatabaseSeeder::class); // what every container boot does
+
+        $this->assertSame('Editada por el operador', Raffle::find(35)->title);
+        $this->assertSame(777, (int) Raffle::find(35)->tickets_sold_count);
+        $this->assertSame('Titular Real', BankAccount::first()->account_holder_name);
+        $this->assertNull(Raffle::find(31), 'a deleted raffle must not come back');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +42,14 @@ class DatabaseSeeder extends Seeder
             $user->update($changes);
         }
 
-        $this->call(CatalogSeeder::class);
+        // The demo catalog is first-boot data only. This seeder runs on EVERY
+        // container boot, so without this marker each redeploy would overwrite
+        // what the operator edited (titles, prices, tickets_sold_count...) and
+        // bring back deleted raffles.
+        if (Setting::find('demo_catalog_seeded') === null) {
+            $this->call(CatalogSeeder::class);
+
+            Setting::create(['key' => 'demo_catalog_seeded', 'value' => ['at' => now()->toIso8601String()]]);
+        }
     }
 }
