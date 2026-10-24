@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -67,17 +68,17 @@ class UserResource extends Resource
     /** Only administrators manage users (plan U6 role policy). */
     public static function canViewAny(): bool
     {
-        return auth()->user()?->role === 'admin';
+        return Auth::user()?->role === 'admin';
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->role === 'admin';
+        return Auth::user()?->role === 'admin';
     }
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->role === 'admin';
+        return Auth::user()?->role === 'admin';
     }
 
     public static function canDelete($record): bool

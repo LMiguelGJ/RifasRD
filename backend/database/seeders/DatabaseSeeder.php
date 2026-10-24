@@ -11,13 +11,22 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
+        $password = env('ADMIN_PASSWORD');
+
+        $user = User::firstOrCreate(
             ['email' => env('ADMIN_EMAIL', 'admin@rifasrd.local')],
             [
                 'name' => 'Admin',
-                'password' => Hash::make(env('ADMIN_PASSWORD') ?: Str::random(24)),
+                'role' => 'admin',
+                'password' => Hash::make($password ?: Str::random(24)),
             ],
         );
+
+        // Only rotate the password when one is explicitly configured, so a
+        // reboot never locks the operator out of the panel.
+        if ($password) {
+            $user->update(['password' => Hash::make($password)]);
+        }
 
         $this->call(CatalogSeeder::class);
     }

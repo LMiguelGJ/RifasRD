@@ -79,13 +79,25 @@ docs/              BACKEND-HANDOVER.md and the captured reference of the origina
 
 ## Connect a real backend
 
-See [docs/BACKEND-HANDOVER.md](docs/BACKEND-HANDOVER.md): endpoints, payloads, business rules
-and the three-step switch (`useMock: false`).
+The Laravel backend lives in `backend/` and is served by the same container as this
+frontend (see [docs/BACKEND-HANDOVER.md](docs/BACKEND-HANDOVER.md) for the API contract).
+`src/environments/environment.ts` points at the same-origin API (`useMock: false`,
+`apiUrl: ''`). Set `useMock: true` to run the static demo without any backend.
 
 ## Deploy
 
-The build is a static folder. Host it anywhere that serves `index.html` for unknown paths
-(single-page-app fallback). `public/_redirects` already does this for Netlify and Cloudflare Pages.
+One container ships everything: Angular SPA + Laravel API + Filament panel + Postgres.
+Build with the root `Dockerfile` (`docker build -t rifasrd .`), run with
+`docker run -p 8080:8080 -v rifasrd-data:/var/lib/postgresql rifasrd`.
+
+- Site: `/` · API: `/api` · Admin panel: `/admin` · Health: `/healthz`
+- Runtime env (optional): `ADMIN_EMAIL`, `ADMIN_PASSWORD` (panel login), `MAIL_*`
+  (SMTP; defaults to log), `TURNSTILE_SECRET_KEY` (else the math captcha is used),
+  `APP_KEY` and `DB_PASSWORD` (auto-generated and persisted if omitted).
+- First boot runs migrations and seeds the demo catalog (12 raffles, 7 fake banks).
+  The seeder is idempotent but re-applies demo values on every boot; disable it for
+  real production data.
+
 Demo catalog photos in `public/demo/rev/` are included in Git and Docker builds.
 
 ## Notes

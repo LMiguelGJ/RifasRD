@@ -1,5 +1,12 @@
 # Backend handover
 
+> **Status: implemented.** The contract below is served by the Laravel app in
+> `backend/` (same container as the SPA, same origin). The admin panel is `/admin`
+> (Filament): dashboard, orders with approve/reject, raffles, tickets, participants,
+> bank accounts, winners, maintenance switch and users. This document remains the
+> API reference; response shapes of `checkout`, `checkout/lookup` and `public/orders`
+> are the ones to confirm first against real traffic.
+
 The storefront never talks to a server directly. Every component asks the
 `RifasApi` class (`src/app/core/api/rifas-api.ts`) for data, and two classes
 implement it:
