@@ -113,10 +113,14 @@ autorestart=true
 priority=10
 
 [program:queue]
-command=php /var/www/html/artisan queue:work --sleep=3 --tries=3
+; Waits for /migrate.sh to finish: before that the role/tables do not exist.
+command=/bin/sh -c 'until [ -f /tmp/.migrated ]; do sleep 2; done; exec php /var/www/html/artisan queue:work --sleep=3 --tries=3'
 user=www-data
 directory=/var/www/html
+autostart=true
 autorestart=true
+startsecs=5
+startretries=20
 priority=20
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
@@ -128,6 +132,7 @@ EOF
 COPY <<'EOF' /migrate.sh
 #!/bin/sh
 set -ex
+rm -f /tmp/.migrated
 PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -n1)
 until su postgres -c "$PGBIN/pg_isready -q" 2>/dev/null; do sleep 1; done
 DBU="${DB_USERNAME:-rifasrd}"
@@ -144,6 +149,7 @@ php artisan storage:link || true
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+touch /tmp/.migrated
 echo "migrate: done"
 EOF
 
@@ -193,5 +199,5 @@ RUN chmod +x /entrypoint.sh /migrate.sh
 EXPOSE 8080
 # start-period matters: Postgres init + migrate + seed happen before /healthz
 # can go 200; without it Swarm rolls back to the old task while booting.
-HEALTHCHECK --interval=10s --timeout=5s --start-period=90s --retries=6 CMD wget -qO- http://127.0.0.1:8080/healthz >/dev/null || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=90s --retries=6 CMD curl -fsS http://127.0.0.1:8080/healthz >/dev/null || exit 1
 ENTRYPOINT ["/entrypoint.sh"]
