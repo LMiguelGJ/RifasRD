@@ -1,0 +1,1021 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Vehículos",
+      "slug": "vehiculo",
+      "sort_order": 40
+    },
+    {
+      "id": 2,
+      "name": "Tecnología",
+      "slug": "tecnologia",
+      "sort_order": 30
+    },
+    {
+      "id": 3,
+      "name": "Relojes",
+      "slug": "relojes",
+      "sort_order": 20
+    },
+    {
+      "id": 5,
+      "name": "Dinero",
+      "slug": "dinero",
+      "sort_order": 10
+    }
+  ],
+  "banks": [
+    {
+      "bank_name": "Asociacion Popular (APAP)",
+      "account_type": "Ahorro",
+      "account_number": "0000-0000-0001",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": null,
+      "image_url": "/demo/banks/bank_6ac7dfcc9cf482.59477549.webp"
+    },
+    {
+      "bank_name": "Banco Reservas",
+      "account_type": "Ahorro",
+      "account_number": "0000-0000-0002",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": "#05b8f3",
+      "image_url": "/demo/banks/bank_69dab21deaf941.87069052.webp"
+    },
+    {
+      "bank_name": "BHD",
+      "account_type": "Ahorro",
+      "account_number": "0000-0000-0003",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": null,
+      "image_url": "/demo/banks/bank_6ac835e6cd6689.12766233.webp"
+    },
+    {
+      "bank_name": "Efectivo",
+      "account_type": "Solo personas de Constanza.",
+      "account_number": "0000-0000-0004",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": "#15803d",
+      "image_url": "/demo/banks/bank_6a41e7020aa879.09808133.webp"
+    },
+    {
+      "bank_name": "Interbancaria a Qik",
+      "account_type": "Ahorro",
+      "account_number": "0000-0000-0005",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": null,
+      "image_url": "/demo/banks/bank_6ace292399ee67.16376278.webp"
+    },
+    {
+      "bank_name": "Popular",
+      "account_type": "Corriente",
+      "account_number": "0000-0000-0006",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": null,
+      "image_url": "/demo/banks/bank_6ac79cb4b02f07.73812463.webp"
+    },
+    {
+      "bank_name": "Qik",
+      "account_type": "Ahorro",
+      "account_number": "0000-0000-0007",
+      "account_holder_name": "Titular Demo",
+      "holder_id": "000-0000000-0",
+      "currency": "DOP",
+      "is_active": true,
+      "sort_order": 0,
+      "color": "#05b8f3",
+      "image_url": "/demo/banks/bank_6a4d33336d19a3.28320167.webp"
+    }
+  ],
+  "raffles": [
+    {
+      "id": 22,
+      "category_id": 2,
+      "title": "10 IPhone 18 Pro Max X $ 25 pesos",
+      "description": "10 IPhone 18 Pro Max X $ 25 pesos",
+      "ticket_goal": 99999,
+      "ticket_price": "25.00",
+      "max_tickets_per_user": 10000,
+      "min_tickets_per_user": 4,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/raffles/raffle_6ac527b5e90bc6.55168274.webp",
+      "tickets_sold_count": 45310,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 4,
+          "package_price": "100.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 8,
+          "package_price": "200.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 20,
+          "package_price": "500.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 40,
+          "package_price": "1000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 60,
+          "package_price": "1500.00",
+          "sort_order": 5,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 120,
+          "package_price": "3000.00",
+          "sort_order": 6,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 200,
+          "package_price": "5000.00",
+          "sort_order": 7,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "category_id": 1,
+      "title": "Honda CRV Touring Híbrida 2026",
+      "description": "Por tan solo $75 pesos, ¡esta Honda CR‑V Híbrida 2026 puede ser tuya! 😍\r\n\r\nCon solo 3,000 millas, está prácticamente nueva y podrías ser su primer dueño. 🚘🔥\r\n\r\nY eso no es todo: también hay 20 premios de $10,000. Si sale uno de tus números, ¡te llevas tus $10,000 de inmediato! 💸",
+      "ticket_goal": 99999,
+      "ticket_price": "75.00",
+      "max_tickets_per_user": 1000,
+      "min_tickets_per_user": 2,
+      "winners_count": 20,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/raffles/raffle_6abdd945dfe627.19199125.webp",
+      "tickets_sold_count": 66427,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 2,
+          "package_price": "150.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 4,
+          "package_price": "300.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 8,
+          "package_price": "600.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 14,
+          "package_price": "1050.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 20,
+          "package_price": "1500.00",
+          "sort_order": 5,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 27,
+          "package_price": "2025.00",
+          "sort_order": 6,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 50,
+          "package_price": "3750.00",
+          "sort_order": 7,
+          "show_on_public": true,
+          "accent": "gold"
+        },
+        {
+          "quantity": 100,
+          "package_price": "7500.00",
+          "sort_order": 8,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "category_id": 1,
+      "title": "Honda CBR1000RR Repsol 2015",
+      "description": "Honda CBR1000RR Repsol 2015. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 49999,
+      "ticket_price": "100.00",
+      "max_tickets_per_user": 500,
+      "min_tickets_per_user": 4,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/cbr1000rr-repsol.webp",
+      "tickets_sold_count": 45999,
+      "draw_in_hours": 7,
+      "combos": [
+        {
+          "quantity": 4,
+          "package_price": "400.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "1000.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 25,
+          "package_price": "2500.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 50,
+          "package_price": "5000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "category_id": 1,
+      "title": "Tesla Model Y Long Range 2024",
+      "description": "Tesla Model Y Long Range 2024. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 99999,
+      "ticket_price": "150.00",
+      "max_tickets_per_user": 1000,
+      "min_tickets_per_user": 2,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/tesla-model-y.webp",
+      "tickets_sold_count": 83999,
+      "draw_in_hours": 30,
+      "combos": [
+        {
+          "quantity": 2,
+          "package_price": "300.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 6,
+          "package_price": "900.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 15,
+          "package_price": "2250.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 40,
+          "package_price": "6000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "category_id": 1,
+      "title": "BMW M3 Competition 2021",
+      "description": "BMW M3 Competition 2021. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 74999,
+      "ticket_price": "125.00",
+      "max_tickets_per_user": 800,
+      "min_tickets_per_user": 4,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/bmw-m3-competition.webp",
+      "tickets_sold_count": 45749,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 4,
+          "package_price": "500.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "1250.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 25,
+          "package_price": "3125.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 60,
+          "package_price": "7500.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "category_id": 1,
+      "title": "Aston Martin Vantage 2020",
+      "description": "Aston Martin Vantage 2020. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 99999,
+      "ticket_price": "200.00",
+      "max_tickets_per_user": 600,
+      "min_tickets_per_user": 2,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/aston-martin-vantage.webp",
+      "tickets_sold_count": 38000,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 2,
+          "package_price": "400.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 5,
+          "package_price": "1000.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 12,
+          "package_price": "2400.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 30,
+          "package_price": "6000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "category_id": 1,
+      "title": "Ford Ranger Wildtrak X 2024",
+      "description": "Ford Ranger Wildtrak X 2024. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 59999,
+      "ticket_price": "100.00",
+      "max_tickets_per_user": 1000,
+      "min_tickets_per_user": 4,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/ford-ranger-wildtrak.webp",
+      "tickets_sold_count": 8400,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 4,
+          "package_price": "400.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "1000.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 25,
+          "package_price": "2500.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 50,
+          "package_price": "5000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "category_id": 2,
+      "title": "AirPods Max inalámbricos",
+      "description": "AirPods Max inalámbricos. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 9999,
+      "ticket_price": "50.00",
+      "max_tickets_per_user": 300,
+      "min_tickets_per_user": 5,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/airpods-max.webp",
+      "tickets_sold_count": 6899,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 5,
+          "package_price": "250.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "500.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 20,
+          "package_price": "1000.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 40,
+          "package_price": "2000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "category_id": 3,
+      "title": "Rolex GMT-Master II Pepsi",
+      "description": "Rolex GMT-Master II Pepsi. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 14999,
+      "ticket_price": "250.00",
+      "max_tickets_per_user": 200,
+      "min_tickets_per_user": 2,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/rolex-gmt-master.webp",
+      "tickets_sold_count": 750,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 2,
+          "package_price": "500.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 5,
+          "package_price": "1250.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "2500.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 20,
+          "package_price": "5000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "category_id": 3,
+      "title": "Garmin Fenix 8 AMOLED 47 mm",
+      "description": "Garmin Fenix 8 AMOLED 47 mm. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 9999,
+      "ticket_price": "60.00",
+      "max_tickets_per_user": 300,
+      "min_tickets_per_user": 5,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/garmin-fenix-8.webp",
+      "tickets_sold_count": 0,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 5,
+          "package_price": "300.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "600.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 20,
+          "package_price": "1200.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 40,
+          "package_price": "2400.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "category_id": 5,
+      "title": "Bono de compras de RD$ 50,000",
+      "description": "Bono de compras de RD$ 50,000. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 9999,
+      "ticket_price": "40.00",
+      "max_tickets_per_user": 400,
+      "min_tickets_per_user": 5,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/bono-compras.webp",
+      "tickets_sold_count": 4700,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 5,
+          "package_price": "200.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "400.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 25,
+          "package_price": "1000.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 50,
+          "package_price": "2000.00",
+          "sort_order": 4,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "category_id": 5,
+      "title": "Bono de viaje de RD$ 150,000",
+      "description": "Bono de viaje de RD$ 150,000. Rifa de ejemplo para la demostración.",
+      "ticket_goal": 4999,
+      "ticket_price": "75.00",
+      "max_tickets_per_user": 100,
+      "min_tickets_per_user": 3,
+      "winners_count": 0,
+      "digit_count": 5,
+      "status": "active",
+      "type": "standard",
+      "show_available_tickets": false,
+      "show_ends_at": false,
+      "banner_image": "/demo/rev/bono-viaje.webp",
+      "tickets_sold_count": 4999,
+      "draw_in_hours": null,
+      "combos": [
+        {
+          "quantity": 3,
+          "package_price": "225.00",
+          "sort_order": 1,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 6,
+          "package_price": "450.00",
+          "sort_order": 2,
+          "show_on_public": true,
+          "accent": "blue"
+        },
+        {
+          "quantity": 10,
+          "package_price": "750.00",
+          "sort_order": 3,
+          "show_on_public": true,
+          "accent": "gold"
+        }
+      ]
+    }
+  ],
+  "prize_numbers": {
+    "20": [
+      {
+        "id": 627,
+        "number": "10100",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 1
+      },
+      {
+        "id": 628,
+        "number": "11111",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 2
+      },
+      {
+        "id": 629,
+        "number": "12222",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 3
+      },
+      {
+        "id": 630,
+        "number": "13333",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 4
+      },
+      {
+        "id": 631,
+        "number": "14444",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 5
+      },
+      {
+        "id": 632,
+        "number": "15555",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 6
+      },
+      {
+        "id": 633,
+        "number": "16666",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 7
+      },
+      {
+        "id": 634,
+        "number": "17777",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 8
+      },
+      {
+        "id": 635,
+        "number": "18888",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 9
+      },
+      {
+        "id": 636,
+        "number": "19999",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 10
+      },
+      {
+        "id": 637,
+        "number": "21111",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 11
+      },
+      {
+        "id": 638,
+        "number": "22222",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 12
+      },
+      {
+        "id": 639,
+        "number": "23333",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 13
+      },
+      {
+        "id": 640,
+        "number": "24444",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 14
+      },
+      {
+        "id": 641,
+        "number": "25555",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 15
+      },
+      {
+        "id": 642,
+        "number": "26666",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 16
+      },
+      {
+        "id": 643,
+        "number": "27777",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 17
+      },
+      {
+        "id": 644,
+        "number": "28888",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "claimed",
+        "sort_order": 18
+      },
+      {
+        "id": 645,
+        "number": "29999",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 19
+      },
+      {
+        "id": 646,
+        "number": "33322",
+        "prize_label": null,
+        "prize_amount": "10000.00",
+        "status": "available",
+        "sort_order": 20
+      }
+    ],
+    "22": []
+  },
+  "winners": [
+    {
+      "display_name": "Cleison Miguel",
+      "prize_label": "Dahiatsu Mira",
+      "drawn_at": "2026-09-19T23:48:55.000000Z",
+      "custom_raffle_title": "Dahiatsu Mira",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6aaf1f670d75a7.87015097.webp"
+    },
+    {
+      "display_name": "Liliana Duarte",
+      "prize_label": "Ford Mustang",
+      "drawn_at": "2026-09-04T22:23:55.000000Z",
+      "custom_raffle_title": "Ford Mustang",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6a9b44fb71fe73.07557685.webp"
+    },
+    {
+      "display_name": "Eliezer Fernandez",
+      "prize_label": "Honda Dio 140cc",
+      "drawn_at": "2026-07-06T15:52:36.000000Z",
+      "custom_raffle_title": "Honda Dio 140cc",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6a4bcf44360774.80639351.webp"
+    },
+    {
+      "display_name": "Jose Osvaldo",
+      "prize_label": "Mercedes Benz",
+      "drawn_at": "2026-07-03T19:28:12.000000Z",
+      "custom_raffle_title": "Mercedes Benz",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6a480d4c1a9dc7.96498095.webp"
+    },
+    {
+      "display_name": "Rigoberto mercedes",
+      "prize_label": "Honda XR 650cc",
+      "drawn_at": "2026-07-03T19:26:20.000000Z",
+      "custom_raffle_title": "Honda XR 650cc",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6a480cdc4b61a2.57892772.webp"
+    },
+    {
+      "display_name": "Wilkins Luzon",
+      "prize_label": "Mercedes Benz C250",
+      "drawn_at": "2026-05-26T14:42:14.000000Z",
+      "custom_raffle_title": "Mercedes Benz C250",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_6a15b1456686c9.21762674.webp"
+    },
+    {
+      "display_name": "David Durán",
+      "prize_label": "Pasola",
+      "drawn_at": "2026-04-10T04:10:54.000000Z",
+      "custom_raffle_title": "Pasola",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d8784d91db96.08239754.webp"
+    },
+    {
+      "display_name": "Miguel Díaz",
+      "prize_label": "IPhone",
+      "drawn_at": "2026-04-10T04:10:53.000000Z",
+      "custom_raffle_title": "IPhone",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d8784d13b757.32264425.webp"
+    },
+    {
+      "display_name": "Yendry Victoriano",
+      "prize_label": "yfz",
+      "drawn_at": "2026-04-10T04:10:53.000000Z",
+      "custom_raffle_title": "yfz",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d8784c193907.60400533.webp"
+    },
+    {
+      "display_name": "Marino Paredes",
+      "prize_label": "Gacella KTR",
+      "drawn_at": "2026-04-10T03:50:24.000000Z",
+      "custom_raffle_title": "Gacella KTR",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d8737fb17236.62438086.webp"
+    },
+    {
+      "display_name": "Harol",
+      "prize_label": "iPhone 17 Pro",
+      "drawn_at": "2026-04-10T03:35:39.000000Z",
+      "custom_raffle_title": "iPhone 17 Pro",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d8700ac93c77.39410184.webp"
+    },
+    {
+      "display_name": "Ranyeli Durán",
+      "prize_label": "Ford Mustang",
+      "drawn_at": "2026-04-10T03:30:46.000000Z",
+      "custom_raffle_title": "Ford Mustang",
+      "custom_ticket_number": null,
+      "winner_type": "main",
+      "portrait_url": "/demo/winners/winner_69d86ee5114d03.05335652.webp"
+    }
+  ]
+}
