@@ -15,7 +15,7 @@ RUN npm run build
 FROM php:8.3-fpm
 RUN apt-get update && apt-get install -y --no-install-recommends \
       nginx supervisor postgresql postgresql-contrib \
-      libpq-dev libzip-dev libicu-dev unzip git curl \
+      libpq-dev libzip-dev libicu-dev util-linux unzip git curl \
     && docker-php-ext-install pdo_pgsql zip opcache intl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -91,7 +91,7 @@ nodaemon=true
 user=root
 
 [program:postgres]
-command=/usr/lib/postgresql/15/bin/postgres -D /var/lib/postgresql/15/main -c listen_addresses=127.0.0.1
+command=/bin/sh -c 'exec "$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -n1)/postgres" -D /var/lib/postgresql/data -c listen_addresses=127.0.0.1'
 user=postgres
 autorestart=true
 priority=1
@@ -127,8 +127,9 @@ EOF
 # First-boot DB bootstrap + migrate + seed (idempotent).
 COPY <<'EOF' /migrate.sh
 #!/bin/sh
-set -e
-until su postgres -c "/usr/lib/postgresql/15/bin/pg_isready -q" 2>/dev/null; do sleep 1; done
+set -ex
+PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -n1)
+until su postgres -c "$PGBIN/pg_isready -q" 2>/dev/null; do sleep 1; done
 DBU="${DB_USERNAME:-rifasrd}"
 DBP="${DB_PASSWORD:-rifasrd}"
 DBD="${DB_DATABASE:-rifasrd}"
@@ -149,7 +150,11 @@ EOF
 # Entrypoint: stable secrets, init Postgres cluster on first boot, then supervisord.
 COPY <<'EOF' /entrypoint.sh
 #!/bin/sh
-set -e
+set -ex
+
+# Postgres binary dir is version-agnostic (bookworm=15, trixie=17, ...).
+PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -n1)
+PGDATA=/var/lib/postgresql/data
 
 # Database password is generated once and persisted beside the data volume so
 # reboots never orphan the role. Postgres only listens on 127.0.0.1 in-container.
@@ -175,11 +180,10 @@ if [ -z "$APP_KEY" ]; then
   fi
 fi
 
-PGDATA=/var/lib/postgresql/15/main
 if [ ! -f "$PGDATA/PG_VERSION" ]; then
   mkdir -p "$PGDATA"
   chown -R postgres:postgres /var/lib/postgresql
-  su postgres -c "/usr/lib/postgresql/15/bin/initdb -D $PGDATA --auth-local=trust --auth-host=scram-sha-256 --encoding=UTF8"
+  su postgres -c "$PGBIN/initdb -D $PGDATA --auth-local=trust --auth-host=scram-sha-256 --encoding=UTF8"
 fi
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 EOF
