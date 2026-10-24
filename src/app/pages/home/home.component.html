@@ -572,10 +572,10 @@
                     }
                     <span class="bank-account-card__inner">
                       @if (bank.image?.url) {
-                        <img class="bank-account-card__logo" [src]="bank.image?.url" [alt]="bank.bank_name" />
-                      } @else {
-                        <span>{{ bank.bank_name }}</span>
+                        <img class="bank-account-card__logo" [src]="bank.image?.url" alt="" />
                       }
+                      <span class="bank-account-card__name">{{ bank.bank_name }}</span>
+                      <span class="bank-account-card__num">{{ bank.account_number }}</span>
                     </span>
                   </button>
                 }

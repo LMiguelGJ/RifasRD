@@ -582,6 +582,21 @@
   object-fit: contain;
 }
 
+.bank-account-card__name {
+  color: var(--on-ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.bank-account-card__num {
+  color: var(--on-ink-muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
 .terms {
   display: flex;
   gap: 0.75rem;
