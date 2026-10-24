@@ -36,6 +36,9 @@ class Raffle extends Model
 
     protected $appends = ['tickets_available_count', 'banner_image'];
 
+    /** Eager-load counter, internal only (avoids an N+1 in tickets_available_count). */
+    protected $hidden = ['prize_numbers_count'];
+
     protected static function booted(): void
     {
         // Business rule: the draw date is only settable once 80% of the goal is sold.
@@ -82,9 +85,33 @@ class Raffle extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    /** Digits of a ticket number, clamped to what the number generator supports. */
+    public function numberDigits(): int
+    {
+        return max(1, min(7, (int) $this->digit_count));
+    }
+
+    /** Size of the number space: 10^digits (e.g. 100000 for 5 digits). */
+    public function numberPool(): int
+    {
+        return 10 ** $this->numberDigits();
+    }
+
+    /**
+     * Tickets that can really be sold: the goal, but never more than the free
+     * number space (pool minus numbers reserved as prizes). Otherwise an order
+     * could pass checkout and then fail at approval for lack of numbers.
+     */
+    public function sellableCapacity(): int
+    {
+        $prizes = (int) ($this->prize_numbers_count ?? $this->prizeNumbers()->count());
+
+        return max(0, min((int) $this->ticket_goal, $this->numberPool() - $prizes));
+    }
+
     public function getTicketsAvailableCountAttribute(): int
     {
-        return max(0, $this->ticket_goal - $this->tickets_sold_count);
+        return max(0, $this->sellableCapacity() - $this->tickets_sold_count);
     }
 
     /** Contract field: the raffle cover image URL (mirrors image.url). */

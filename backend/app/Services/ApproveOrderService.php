@@ -88,8 +88,8 @@ class ApproveOrderService
     private function pickNumbers(Order $order): array
     {
         $raffle = $order->raffle;
-        $digits = max(1, min(7, (int) $raffle->digit_count));
-        $pool = 10 ** $digits;
+        $digits = $raffle->numberDigits();
+        $pool = $raffle->numberPool();
 
         if ($order->quantity > $pool) {
             throw new RuntimeException('Not enough number space for this order.');

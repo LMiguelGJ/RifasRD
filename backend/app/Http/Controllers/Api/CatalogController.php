@@ -24,6 +24,7 @@ class CatalogController extends Controller
     {
         $query = Raffle::query()
             ->with(['category', 'image', 'ticketCombos'])
+            ->withCount('prizeNumbers')
             ->where('status', '!=', 'draft')
             ->orderBy('id');
 
@@ -40,7 +41,7 @@ class CatalogController extends Controller
     {
         abort_if($raffle->status === RaffleStatus::Draft, 404);
 
-        return response()->json($raffle->load(['category', 'image', 'ticketCombos']));
+        return response()->json($raffle->loadCount('prizeNumbers')->load(['category', 'image', 'ticketCombos']));
     }
 
     public function prizeNumbers(Raffle $raffle): JsonResponse
@@ -51,7 +52,7 @@ class CatalogController extends Controller
     public function winners(Request $request): JsonResponse
     {
         $query = Winner::query()
-            ->with(['raffle', 'ticket', 'participant', 'portraitImage'])
+            ->with(['raffle' => fn ($raffle) => $raffle->withCount('prizeNumbers'), 'ticket', 'participant', 'portraitImage'])
             ->orderByDesc('drawn_at')
             ->orderByDesc('id');
 
