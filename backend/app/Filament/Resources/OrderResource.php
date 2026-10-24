@@ -13,7 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use App\Support\VoucherPath;
 use RuntimeException;
 
 class OrderResource extends Resource
@@ -113,7 +113,7 @@ class OrderResource extends Resource
                 Tables\Actions\Action::make('voucher')->label('Comprobante')
                     ->icon('heroicon-o-document')
                     ->visible(fn (Order $record): bool => (bool) $record->voucher_path)
-                    ->action(fn (Order $record) => response()->download(Storage::disk('local')->path($record->voucher_path))),
+                    ->action(fn (Order $record) => response()->download(VoucherPath::resolve($record->voucher_path))),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([]);

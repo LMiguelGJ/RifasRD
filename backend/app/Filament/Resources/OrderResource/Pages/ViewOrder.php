@@ -9,7 +9,7 @@ use Filament\Actions;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Support\Facades\Storage;
+use App\Support\VoucherPath;
 use RuntimeException;
 
 class ViewOrder extends ViewRecord
@@ -45,7 +45,7 @@ class ViewOrder extends ViewRecord
             Actions\Action::make('voucher')->label('Ver comprobante')
                 ->icon('heroicon-o-document')
                 ->visible(fn (): bool => (bool) $this->record->voucher_path)
-                ->action(fn () => response()->download(Storage::disk('local')->path($this->record->voucher_path))),
+                ->action(fn () => response()->download(VoucherPath::resolve($this->record->voucher_path))),
             Actions\Action::make('approve')->label('Aprobar')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')

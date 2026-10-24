@@ -31,8 +31,8 @@ COPY --from=frontend /app/dist/rifas-luxury-demo/browser/ ./public/
 RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views \
       storage/logs storage/app/vouchers \
     && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache \
-    && mkdir -p /var/lib/postgresql/15/main \
+    && chmod -R 770 storage bootstrap/cache \
+    && mkdir -p /var/lib/postgresql/data \
     && chown -R postgres:postgres /var/lib/postgresql
 
 # Single-container defaults: Postgres listens on 127.0.0.1 inside this container.
@@ -164,7 +164,7 @@ if [ -z "$DB_PASSWORD" ]; then
     DB_PASSWORD=$(cat "$PWF")
   else
     DB_PASSWORD=$(head -c 24 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24)
-    printf '%s' "$DB_PASSWORD" > "$PWF"
+    ( umask 077; printf '%s' "$DB_PASSWORD" > "$PWF" )
   fi
   export DB_PASSWORD
 fi
@@ -176,7 +176,7 @@ if [ -z "$APP_KEY" ]; then
     export APP_KEY=$(cat /var/www/html/storage/.app_key)
   else
     export APP_KEY=$(php /var/www/html/artisan key:generate --show --no-ansi)
-    printf '%s' "$APP_KEY" > /var/www/html/storage/.app_key
+    ( umask 077; printf '%s' "$APP_KEY" > /var/www/html/storage/.app_key )
   fi
 fi
 
