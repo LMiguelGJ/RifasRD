@@ -217,9 +217,13 @@ html body .rd-mobile-desc .fi-ta-text-item-description {
   }
 
   /* Wide tables are never worth a sideways scroll for the primary action. */
-  html body .fi-ta-header-cell,
-  html body .fi-ta-cell {
+  html body .fi-ta-header-cell {
     padding-inline: 0.6rem;
+  }
+
+  /* Filament's cell content already has horizontal padding; avoid doubling it on phones. */
+  html body .fi-ta-cell {
+    padding-inline: 0;
   }
 
   html body .fi-header-heading {

@@ -88,15 +88,29 @@ frontend (see [docs/BACKEND-HANDOVER.md](docs/BACKEND-HANDOVER.md) for the API c
 
 One container ships everything: Angular SPA + Laravel API + Filament panel + Postgres.
 Build with the root `Dockerfile` (`docker build -t rifasrd .`), run with
-`docker run -p 8080:8080 -v rifasrd-data:/var/lib/postgresql rifasrd`.
+```sh
+docker run -p 8080:8080 \
+  -v rifasrd-data:/var/lib/postgresql \
+  -v rifasrd-vouchers:/var/www/html/storage/app/private \
+  -v rifasrd-uploads:/var/www/html/storage/app/public \
+  rifasrd
+```
+
+Mount all three named volumes in Dokploy as well. The private volume holds vouchers;
+the public volume holds photos uploaded through the panel. Without those mounts,
+replacing a container loses uploaded files. Preserve existing database volumes and
+use stop-first updates: two containers must never share the database volume concurrently.
 
 - Site: `/` · API: `/api` · Admin panel: `/admin` · Health: `/healthz`
 - Runtime env (optional): `ADMIN_EMAIL`, `ADMIN_PASSWORD` (panel login), `MAIL_*`
   (SMTP; defaults to log), `TURNSTILE_SECRET_KEY` (else the math captcha is used),
   `APP_KEY` and `DB_PASSWORD` (auto-generated and persisted if omitted).
-- First boot runs migrations and seeds the demo catalog (12 raffles, 7 fake banks).
-  The seeder is idempotent but re-applies demo values on every boot; disable it for
-  real production data.
+- Boot runs migrations. The demo catalog (12 raffles, 7 fake banks) is seeded once,
+  tracked by `demo_catalog_seeded`; later deployments preserve operator edits.
+- In **Rifas → Editar**, **Foto actual** previews the saved image; **Cambiar foto**
+  replaces it when saved. The preview refreshes immediately after saving.
+- On phones, secondary table columns are hidden and summaries remain under the
+  main label. Row actions use touch-sized icons; tapping an order row opens it.
 
 Demo catalog photos in `public/demo/rev/` are included in Git and Docker builds.
 

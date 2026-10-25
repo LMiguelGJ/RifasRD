@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages\ListOrders;
 use App\Filament\Resources\RaffleResource\Pages\EditRaffle;
 use App\Filament\Resources\RaffleResource\Pages\ListRaffles;
+use App\Filament\Widgets\TopRaffles;
 use App\Models\BankAccount;
 use App\Models\Order;
 use App\Models\Participant;
@@ -43,6 +44,18 @@ class AdminMobileAndPhotoTest extends TestCase
             'customer_slug' => 'maria-perez',
             'public_view_token' => 'token-mobile-1',
         ]);
+    }
+
+    public function test_mobile_table_cells_remove_filament_padding_without_changing_desktop_styles(): void
+    {
+        $css = file_get_contents(public_path('admin-theme.css'));
+
+        $this->assertIsString($css);
+        $this->assertMatchesRegularExpression(
+            '/@media \(max-width: 767px\) \{(?:(?!\n\}).)*html body \.fi-ta-cell \{\s*padding-inline: 0;\s*\}/s',
+            $css,
+            'phone cells must not add padding on top of Filament’s padded inner content'
+        );
     }
 
     public function test_orders_list_keeps_only_essentials_on_a_phone_and_summarises_the_rest(): void
@@ -102,6 +115,13 @@ class AdminMobileAndPhotoTest extends TestCase
         Raffle::where('id', 31)->update(['image_id' => null]);
 
         Livewire::test(EditRaffle::class, ['record' => 31])->assertSee('aún no tiene foto');
+    }
+
+    public function test_dashboard_raffle_titles_can_wrap_to_fit_mobile_tables(): void
+    {
+        $html = Livewire::test(TopRaffles::class)->html();
+
+        $this->assertStringContainsString('whitespace-normal', $html);
     }
 
     public function test_raffle_list_summarises_price_and_progress_under_the_title(): void
