@@ -41,7 +41,8 @@ ENV DB_CONNECTION=pgsql \
     DB_PORT=5432 \
     DB_DATABASE=rifasrd \
     DB_USERNAME=rifasrd \
-    QUEUE_CONNECTION=database
+    QUEUE_CONNECTION=database \
+    APP_LOCALE=es
 
 # SPA + PHP routing, inlined on purpose (no separate nginx.conf artifact).
 COPY <<'EOF' /etc/nginx/nginx.conf

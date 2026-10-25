@@ -25,3 +25,6 @@ Thumbs.db
 
 /database/*.sqlite
 /database/*.sqlite-journal
+
+# Copied from the storefront for local previews; in the image it comes from the Angular build.
+/public/Logo_rifa.png

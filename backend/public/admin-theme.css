@@ -1,0 +1,202 @@
+/*
+ * Admin panel finishing layer. The base is Filament's forced dark mode with the
+ * storefront palette (black surfaces, gold primary), configured in
+ * AdminPanelProvider. This file only adds the original site's touches: framed
+ * logo with a gold glow, gradient headings, spaced uppercase labels and the gold
+ * call-to-action button with black text.
+ */
+:root {
+  --ink: #0a0a0b;
+  --ink-2: #141417;
+  --ink-3: #1e1e22;
+  --on-ink: #f6f6f7;
+  --on-ink-muted: #cfcfd6;
+  --gold: #facc3b;
+  --gold-soft: #fff1b8;
+  --gold-deep: #e0a91c;
+  --gold-line: rgba(250, 204, 59, 0.28);
+  --sky: #7fd0e8;
+  --r-card: 14px;
+  --r-ctl: 12px;
+}
+
+html body.fi-body {
+  font-family: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--ink);
+}
+
+/* ---- Brand: framed logo with gold glow (as on the original site) ---- */
+html body .fi-logo {
+  height: 2.75rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--r-ctl);
+  background: #0d0d0f;
+  box-shadow: 0 0 22px -6px rgba(250, 204, 59, 0.45);
+}
+
+/* ---- Chrome: black bars with a faint gold rule ---- */
+html body .fi-topbar > nav,
+html body .fi-sidebar-header {
+  background: var(--ink);
+  border-bottom: 1px solid var(--gold-line);
+  --tw-ring-shadow: 0 0 #0000;
+  box-shadow: none;
+}
+
+html body .fi-sidebar {
+  background: var(--ink);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html body .fi-sidebar-item-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+html body .fi-sidebar-item-button {
+  border-radius: var(--r-ctl);
+}
+
+html body .fi-sidebar-item-active .fi-sidebar-item-button {
+  background: rgba(250, 204, 59, 0.1);
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+html body .fi-sidebar-item-active .fi-sidebar-item-label,
+html body .fi-sidebar-item-active .fi-sidebar-item-icon {
+  color: var(--gold);
+}
+
+/* ---- Page titles: gradient like the original headings ---- */
+html body .fi-header-heading {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--sky) 0%, var(--gold) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---- Cards: black with a thin gold-tinted edge ---- */
+html body .fi-section,
+html body .fi-ta-ctn,
+html body .fi-wi-table,
+html body .fi-wi-chart,
+html body .fi-wi-stats-overview-stat {
+  border: 1px solid var(--gold-line);
+  border-radius: var(--r-card);
+  --tw-ring-shadow: 0 0 #0000;
+  box-shadow: 0 18px 36px -24px rgba(0, 0, 0, 0.9);
+}
+
+html body .fi-section-header-heading {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+html body .fi-ta-header-cell {
+  background: #0d0d0f;
+}
+
+html body .fi-ta-header-cell span,
+html body .fi-ta-header-cell button {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html body .fi-wi-stats-overview-stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+html body .fi-wi-stats-overview-stat-value {
+  /* Filament sets dark:text-white with higher specificity; the figure must be gold. */
+  color: var(--gold) !important;
+  font-weight: 800;
+}
+
+/* ---- Primary button: gold gradient, black text (the original CTA) ---- */
+html body .fi-btn.fi-color-primary:not(.fi-outlined) {
+  background: linear-gradient(90deg, var(--gold-soft) 0%, var(--gold) 55%, var(--gold-deep) 100%);
+  border-radius: var(--r-ctl);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html body .fi-btn.fi-color-primary:not(.fi-outlined),
+html body .fi-btn.fi-color-primary:not(.fi-outlined) * {
+  color: #111;
+  -webkit-text-fill-color: #111;
+}
+
+html body .fi-btn.fi-color-primary:not(.fi-outlined):hover {
+  filter: brightness(1.06);
+}
+
+html body .fi-btn:not(.fi-color-primary) {
+  border-radius: var(--r-ctl);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+html body .fi-input-wrp {
+  border-radius: var(--r-ctl);
+}
+
+/* ---- Sign-in: black stage, framed logo, ticket card ---- */
+html body .fi-simple-layout {
+  background: radial-gradient(900px 460px at 50% -8%, rgba(250, 204, 59, 0.12) 0%, rgba(10, 10, 11, 0) 70%), var(--ink);
+}
+
+html body .fi-simple-main {
+  background: var(--ink-2);
+  border: 1px solid var(--gold-line);
+  border-radius: 20px;
+  --tw-ring-shadow: 0 0 #0000;
+  box-shadow: 0 28px 70px -24px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+html body .fi-simple-main .fi-logo {
+  height: 4.25rem;
+  padding: 0.4rem 0.9rem;
+  margin-inline: auto;
+}
+
+html body .fi-simple-header-heading {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(90deg, var(--sky) 0%, var(--gold) 75%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+html body .fi-simple-header-subheading {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--on-ink-muted);
+}
+
+html body .fi-simple-main .fi-btn.fi-color-primary {
+  width: 100%;
+  padding-block: 0.75rem;
+}

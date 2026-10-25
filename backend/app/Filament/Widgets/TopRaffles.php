@@ -11,6 +11,8 @@ class TopRaffles extends BaseWidget
 {
     protected static ?int $sort = 2;
 
+    protected static ?string $heading = 'Rifas más vendidas';
+
     protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table

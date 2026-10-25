@@ -11,6 +11,8 @@ class IncomeChart extends BaseWidget
 {
     protected static ?int $sort = 3;
 
+    protected int | string | array $columnSpan = 'full';
+
     protected static ?string $heading = 'Ingresos (últimos 30 días)';
 
     protected function getData(): array
