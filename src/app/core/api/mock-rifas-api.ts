@@ -64,10 +64,12 @@ export class MockRifasApi extends RifasApi {
     let data = MOCK_RAFFLES.filter(r => r.status === 'active');
     if (query.categoryId != null) data = data.filter(r => r.category_id === query.categoryId);
     const perPage = query.perPage ?? 12;
+    const lastPage = Math.max(1, Math.ceil(data.length / perPage));
+    const page = Math.max(1, Math.floor(query.page ?? 1));
     return this.respond({
-      current_page: 1,
-      data: data.slice(0, perPage),
-      last_page: 1,
+      current_page: page,
+      data: data.slice((page - 1) * perPage, page * perPage),
+      last_page: lastPage,
       per_page: perPage,
       total: data.length,
     });

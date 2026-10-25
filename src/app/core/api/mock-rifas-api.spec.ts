@@ -51,6 +51,16 @@ describe('MockRifasApi', () => {
     expect(run(api.getBankAccounts()).value?.every(b => b.account_number.startsWith('0000'))).toBeTrue();
   }));
 
+  it('paginates the demo catalog and preserves category filtering', fakeAsync(() => {
+    const all = run(api.getRaffles({ perPage: 5 })).value!;
+    const second = run(api.getRaffles({ perPage: 5, page: 2 })).value!;
+    expect(all.last_page).toBe(3);
+    expect(second.current_page).toBe(2);
+    expect(second.data.map(r => r.id)).toEqual(MOCK_RAFFLES.filter(r => r.status === 'active').slice(5, 10).map(r => r.id));
+    const category = run(api.getRaffles({ perPage: 2, page: 2, categoryId: 1 })).value!;
+    expect(category.data.every(r => r.category_id === 1)).toBeTrue();
+  }));
+
   it('keeps the demo catalog consistent with the business rules', () => {
     expect(MOCK_RAFFLES.length).toBe(12);
     for (const r of MOCK_RAFFLES) {

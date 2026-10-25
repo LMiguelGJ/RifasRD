@@ -7,6 +7,7 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 
 import { environment } from '@env/environment';
 import { RifasApi } from '../../core/api/rifas-api';
+import { getAllRaffles } from '../../core/api/raffle-pagination';
 import { Category, PrizeNumber, Winner } from '../../core/models/models';
 import { formatWhen } from '../../core/utils/format';
 import { MoneyFormatPipe } from '../../shared/pipes/money-format.pipe';
@@ -198,9 +199,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.rafflesError = null;
     this.raffleCardPrizes = {};
     const categoryId = this.selectedCatalogCategory === 'todos' ? undefined : this.selectedCatalogCategory;
-    this.api.getRaffles({ categoryId, perPage: 50 }).subscribe({
-      next: page => {
-        const cards = page.data.map(r => toRaffleCard(r));
+    getAllRaffles(this.api, { categoryId, perPage: 50 }).subscribe({
+      next: raffles => {
+        const cards = raffles.map(r => toRaffleCard(r));
         this.raffles = cards;
         this.loadPrizeBoards(cards);
         this.rafflesLoading = false;

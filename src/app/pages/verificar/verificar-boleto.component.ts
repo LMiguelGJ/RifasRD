@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, Input, OnInit, ViewChild, inject, 
 import { FormsModule } from '@angular/forms';
 
 import { RifasApi } from '../../core/api/rifas-api';
+import { getAllRaffles } from '../../core/api/raffle-pagination';
 import { LookupBody, LookupResult } from '../../core/models/models';
 import { apiErrorMessage } from '../../core/utils/api-error';
 import { formatWhen } from '../../core/utils/format';
@@ -60,9 +61,9 @@ export class VerificarBoletoComponent implements OnInit {
 
   ngOnInit(): void {
     this.rafflesLoading = true;
-    this.api.getRaffles({ perPage: 50 }).subscribe({
-      next: page => {
-        this.raffleOptions = page.data.map(r => ({ id: String(r.id), title: r.title }));
+    getAllRaffles(this.api, { perPage: 50 }).subscribe({
+      next: raffles => {
+        this.raffleOptions = raffles.map(r => ({ id: String(r.id), title: r.title }));
         this.rafflesLoading = false;
       },
       error: () => {

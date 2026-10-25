@@ -40,6 +40,7 @@ export class HttpRifasApi extends RifasApi {
   getRaffles(query: RaffleQuery = {}): Observable<Paginated<Raffle>> {
     let params = new HttpParams();
     if (query.perPage != null) params = params.set('per_page', query.perPage);
+    if (query.page != null) params = params.set('page', query.page);
     if (query.categoryId != null) params = params.set('category_id', query.categoryId);
     return this.http.get<Paginated<Raffle>>(`${this.base}/raffles`, { params, headers: JSON_HEADERS });
   }

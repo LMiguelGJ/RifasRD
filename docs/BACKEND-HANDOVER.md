@@ -48,7 +48,7 @@ differs, adapt it **inside that one file**, not in the pages.
 | Method and path | Response |
 |---|---|
 | `GET /api/categories` | `Category[]` |
-| `GET /api/raffles?per_page=50&category_id=1` | `Paginated<Raffle>` (`current_page`, `data`, `last_page`, `per_page`, `total`) |
+| `GET /api/raffles?per_page=50&category_id=1&page=1` | `Paginated<Raffle>` (`current_page`, `data`, `last_page`, `per_page`, `total`); the catalog and checker follow subsequent pages with the same category filter |
 | `GET /api/raffles/{id}` | `Raffle` (includes `ticket_combos`) |
 | `GET /api/raffles/{id}/prize-numbers` | `PrizeNumber[]` (`status`: `available` or `claimed`) |
 | `GET /api/winners/recent?limit=50&kind=main` | `Winner[]` (`kind=main` excludes instant-prize winners) |
@@ -112,8 +112,11 @@ Response: the order (or `{ "order": {...} }` or `{ "data": {...} }`; all three a
 }
 ```
 
-The UI masks phone and email (last 4 characters visible). Still return only what
-the matched customer should see, and rate-limit this endpoint.
+Phone lookup requires at least 10 normalized digits; short suffix searches return
+`422` instead of searching customer records. Ticket-number searches return order
+status, amount, timestamps and ticket numbers **without** customer name, email or
+phone. Full-phone searches retain their customer fields; the UI masks contacts.
+Personal order links remain token-based and separate from this public lookup.
 
 ### Personal order page
 
@@ -139,11 +142,32 @@ the matched customer should see, and rate-limit this endpoint.
 
 The UI checks these for usability, but only the server can enforce them:
 
-- Quantity inside `min_tickets_per_user` and `max_tickets_per_user`; a package price comes from `ticket_combos`, never from the client.
+- Quantity inside `min_tickets_per_user` and `max_tickets_per_user`; a package price comes from `ticket_combos`, never from the client. Packages require a positive integer quantity and positive price; checkout also rejects invalid legacy packages.
+- Only active, non-retired bank accounts can receive new checkout orders.
+- Approval rechecks remaining sellable capacity while holding the raffle lock. An over-capacity approval must leave the pending order, ticket count, sold count and notification queue unchanged.
+- A ticket linked to an order must belong to that order's raffle; admin edits cannot move it independently.
 - Raffles with no stock, or whose `draw_at` has passed, cannot be sold.
 - Ticket numbers are assigned **after** payment validation, at random, never reusing prize numbers or numbers already sold.
 - `draw_at` stays `null` until 80% of tickets are sold; the UI then shows "La fecha se coloca con el 80% vendido".
 - Receipt type and size, honeypot and Turnstile verification.
+
+## Admin catalog lifecycle
+
+In **Rifas → Crear/Editar → Paquetes**, choose **Agregar paquete**, set its
+quantity and total package price, and use **Público** to control its availability.
+Save the raffle to persist additions, edits and ordering. **Quitar paquete** retires
+the package rather than deleting order history; it is excluded from new purchases.
+
+**Retirar rifa** removes a raffle from the public catalog and new checkout.
+**Retirar** on a bank account removes it from new payments. Retirement preserves
+existing orders, assigned tickets, winners and historical personal-order links.
+The additive migration introduces `deleted_at` on raffles, packages and banks;
+its rollback intentionally retains these history-preserving columns.
+
+When opening purchase, the storefront refetches the raffle's current price,
+availability, status, limits and packages. If that fetch fails, purchase is disabled
+rather than using stale card data. Root-relative personal links are resolved to an
+absolute HTTP(S) URL before sharing or QR generation.
 
 ## What the demo simulates
 

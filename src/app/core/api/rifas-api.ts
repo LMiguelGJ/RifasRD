@@ -20,6 +20,7 @@ import {
 
 export interface RaffleQuery {
   perPage?: number;
+  page?: number;
   categoryId?: number;
 }
 

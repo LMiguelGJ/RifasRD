@@ -8,7 +8,7 @@ import { RifasApi } from '../../core/api/rifas-api';
 import { BankAccount, CreateOrderRequest, CreatedOrder, TicketCombo } from '../../core/models/models';
 import { apiErrorMessage, isCaptchaError, requiresLegacyCaptcha } from '../../core/utils/api-error';
 import { parseAmount } from '../../core/utils/format';
-import { RaffleCardVm } from './raffle-card.vm';
+import { RaffleCardVm, toRaffleCard } from './raffle-card.vm';
 
 /** Everything the purchase flow needs from the page that hosts it. */
 export interface PurchaseHost {
@@ -133,7 +133,7 @@ export class PurchaseFlow {
   }
 
   get canConfirm(): boolean {
-    if (this.activeRaffle && this.host.isDrawFinished(this.activeRaffle)) return false;
+    if (this.activeRaffle && this.cannotPlay(this.activeRaffle)) return false;
     const phone = this.phoneForApi();
     const receiptOk = this.receiptFile != null && this.receiptFile.size <= RECEIPT_MAX_BYTES;
     const banksReady = !this.bankAccountsLoading && this.bankAccounts.length > 0;
@@ -309,12 +309,9 @@ export class PurchaseFlow {
       next: raffle => {
         const active = this.activeRaffle;
         if (active && String(active.id) === String(id)) {
-          const min = Math.max(1, Number(raffle.min_tickets_per_user));
-          const max = Math.max(min, Number(raffle.max_tickets_per_user));
-          if (Number.isInteger(min) && Number.isInteger(max)) {
-            this.activeRaffle = { ...active, minTickets: min, maxTicketsPerUser: max };
-            this.ticketQty = Math.max(min, Math.min(max, this.ticketQty));
-          }
+          const refreshed = toRaffleCard(raffle);
+          this.activeRaffle = refreshed;
+          this.ticketQty = Math.max(refreshed.minTickets, Math.min(refreshed.maxTicketsPerUser, this.ticketQty));
         }
         this.publicCombos = [...(raffle.ticket_combos ?? [])]
           .filter(c => c.show_on_public !== false)
@@ -329,11 +326,13 @@ export class PurchaseFlow {
         this.purchaseRaffleLoading = false;
       },
       error: () => {
+        const active = this.activeRaffle;
+        if (active && String(active.id) === String(id)) this.activeRaffle = { ...active, soldOut: true };
         this.publicCombos = [];
         this.purchaseSelectionMode = 'custom';
         this.selectedComboId = null;
         this.purchaseRaffleLoading = false;
-        this.purchaseRaffleLoadError = 'No se pudieron cargar los paquetes. Puedes elegir la cantidad manualmente.';
+        this.purchaseRaffleLoadError = 'No se pudieron verificar los datos de la rifa. No se puede completar la compra.';
       },
     });
   }
@@ -576,8 +575,10 @@ export class PurchaseFlow {
 
   private confirm(): void {
     const raffle = this.activeRaffle;
-    if (raffle && this.host.isDrawFinished(raffle)) {
-      this.purchaseError = 'Este sorteo ya finalizó. No se pueden comprar más boletos.';
+    if (raffle && this.cannotPlay(raffle)) {
+      this.purchaseError = raffle.soldOut
+        ? 'Esta rifa no está disponible para la venta.'
+        : 'Este sorteo ya finalizó. No se pueden comprar más boletos.';
       return;
     }
     if (!this.canConfirm || !raffle || !this.receiptFile) return;
@@ -858,7 +859,14 @@ export class PurchaseFlow {
   static resolvePublicViewUrl(order: CreatedOrder | null, fallbackName = ''): string | null {
     if (!order) return null;
     const direct = (order.public_view_url ?? '').trim();
-    if (direct) return direct;
+    if (direct) {
+      try {
+        const parsed = new URL(direct, location.origin);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
+      } catch {
+        // Use the token-based same-origin route when the server URL is malformed.
+      }
+    }
     const token = (order.public_view_token ?? '').trim();
     if (!token) return null;
     let slug = (order.customer_slug ?? '').trim();

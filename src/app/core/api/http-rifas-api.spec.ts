@@ -30,6 +30,20 @@ describe('HttpRifasApi (backend contract)', () => {
     req.flush({ current_page: 1, data: [], last_page: 1, per_page: 50, total: 0 });
   });
 
+  it('adds page only when explicitly requested and leaves existing query URLs unchanged', () => {
+    api.getRaffles({ perPage: 50, categoryId: 1, page: 2 }).subscribe();
+    const paged = http.expectOne(r => r.url === `${BASE}/raffles`);
+    expect(paged.request.params.get('page')).toBe('2');
+    expect(paged.request.params.get('per_page')).toBe('50');
+    expect(paged.request.params.get('category_id')).toBe('1');
+    paged.flush({ current_page: 2, data: [], last_page: 2, per_page: 50, total: 51 });
+
+    api.getRaffles({ perPage: 50, categoryId: 1 }).subscribe();
+    const original = http.expectOne(r => r.url === `${BASE}/raffles`);
+    expect(original.request.params.has('page')).toBeFalse();
+    original.flush({ current_page: 1, data: [], last_page: 1, per_page: 50, total: 0 });
+  });
+
   it('reads raffle detail, prize numbers, categories and banks from the documented paths', () => {
     api.getRaffle(20).subscribe();
     api.getPrizeNumbers(20).subscribe();
