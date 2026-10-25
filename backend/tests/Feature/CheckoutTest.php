@@ -151,6 +151,35 @@ class CheckoutTest extends TestCase
             ->assertJsonValidationErrors('raffle');
     }
 
+    public function test_checkout_rejects_inactive_bank_without_creating_an_order(): void
+    {
+        $this->bank->update(['is_active' => false]);
+
+        $this->postJson('/api/raffles/20/checkout', $this->payload())
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('bank_account_id');
+
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_checkout_rejects_legacy_package_values_outside_purchase_rules(): void
+    {
+        $combo = Raffle::findOrFail(20)->ticketCombos()->firstOrFail();
+        \Illuminate\Support\Facades\DB::table('ticket_combos')->where('id', $combo->id)->update([
+            'quantity' => 0,
+            'package_price' => '-1.00',
+        ]);
+
+        $this->postJson('/api/raffles/20/checkout', $this->payload([
+            'ticket_combo_id' => $combo->id,
+            'quantity' => null,
+        ]))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('ticket_combo_id');
+
+        $this->assertDatabaseCount('orders', 0);
+    }
+
     public function test_lookup_by_phone_and_ticket_number(): void
     {
         $order = $this->postJson('/api/raffles/20/checkout', $this->payload())->json();
@@ -158,10 +187,39 @@ class CheckoutTest extends TestCase
         $byPhone = $this->postJson('/api/raffles/20/checkout/lookup', ['phone' => '8095551234'])->assertOk();
         $this->assertCount(1, $byPhone->json('orders'));
         $this->assertSame($order['id'], $byPhone->json('orders.0.id'));
+        $this->assertSame('Maria Perez', $byPhone->json('orders.0.customer_name'));
+        $this->assertSame('18095551234', $byPhone->json('orders.0.phone'));
 
         $this->postJson('/api/raffles/20/checkout/lookup', ['ticket_number' => '99999'])
             ->assertOk()
             ->assertJsonCount(0, 'orders');
+    }
+
+    public function test_lookup_rejects_short_and_malformed_phone_inputs(): void
+    {
+        foreach (['1', '123456789', 'abc'] as $phone) {
+            $this->postJson('/api/raffles/20/checkout/lookup', ['phone' => $phone])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors('phone');
+        }
+    }
+
+    public function test_ticket_number_lookup_does_not_disclose_customer_contact_details(): void
+    {
+        $order = $this->postJson('/api/raffles/20/checkout', $this->payload())->json();
+        \App\Models\Ticket::create([
+            'raffle_id' => 20,
+            'order_id' => $order['id'],
+            'participant_id' => $this->participant->id,
+            'number' => '54321',
+            'status' => 'validated',
+        ]);
+
+        $response = $this->postJson('/api/raffles/20/checkout/lookup', ['ticket_number' => '54321'])->assertOk();
+        $response->assertJsonPath('orders.0.id', $order['id']);
+        $this->assertArrayNotHasKey('phone', $response->json('orders.0'));
+        $this->assertArrayNotHasKey('email', $response->json('orders.0'));
+        $this->assertArrayNotHasKey('customer_name', $response->json('orders.0'));
     }
 
     public function test_public_order_link_and_404(): void
@@ -171,6 +229,7 @@ class CheckoutTest extends TestCase
         $this->getJson("/api/public/orders/{$order['customer_slug']}/{$order['public_view_token']}")
             ->assertOk()
             ->assertJsonPath('order_id', $order['id'])
+            ->assertJsonPath('customer_name', 'Maria Perez')
             ->assertJsonPath('ticket_count', 0);
 
         $this->getJson("/api/public/orders/{$order['customer_slug']}/bad-token")->assertNotFound();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\OrderStatus;
 use App\Enums\RaffleStatus;
 use App\Http\Controllers\Controller;
+use App\Models\BankAccount;
 use App\Models\Order;
 use App\Models\Participant;
 use App\Models\Raffle;
@@ -73,6 +74,14 @@ class CheckoutController extends Controller
             throw ValidationException::withMessages(['raffle' => ['The draw has already happened.']]);
         }
 
+        $bankAccount = BankAccount::query()
+            ->whereKey($data['bank_account_id'])
+            ->where('is_active', true)
+            ->first();
+        if ($bankAccount === null) {
+            throw ValidationException::withMessages(['bank_account_id' => ['La cuenta bancaria ya no está disponible.']]);
+        }
+
         if ($this->protectedByTurnstile()) {
             if (! $turnstile->verify((string) ($data['turnstile_token'] ?? ''), $request->ip())) {
                 throw ValidationException::withMessages(['turnstile_token' => ['Security verification failed.']]);
@@ -90,11 +99,11 @@ class CheckoutController extends Controller
                 ->where('show_on_public', true)
                 ->first();
 
-            if ($combo === null) {
+            if ($combo === null || ! $combo->isValidForCheckout($raffle)) {
                 throw ValidationException::withMessages(['ticket_combo_id' => ['Invalid package.']]);
             }
 
-            $quantity = $combo->quantity;
+            $quantity = (int) $combo->getAttributes()['quantity'];
             // Server-side pricing: the client never sends the amount.
             $total = number_format((float) $combo->package_price, 2, '.', '');
         } else {
@@ -161,18 +170,20 @@ class CheckoutController extends Controller
             ->orderByDesc('created_at')
             ->limit(50);
 
+        $lookupByPhone = false;
         if (! empty($data['ticket_number'])) {
             $query->whereHas('tickets', fn ($q) => $q->where('number', $data['ticket_number']));
         } elseif (! empty($data['phone'])) {
             // Contract example sends the local 10-digit form while orders store
             // E.164 digits (18095551234): match on the last 10 digits.
-            $suffix = substr($this->normalizePhone($data['phone']), -10);
-
-            if ($suffix === '') {
-                throw ValidationException::withMessages(['phone' => ['Provide a phone or a ticket number.']]);
+            $normalizedPhone = $this->normalizePhone($data['phone']);
+            if (! preg_match('/^\\d{10,15}$/', $normalizedPhone)) {
+                throw ValidationException::withMessages(['phone' => ['Provide a valid phone number with at least 10 digits.']]);
             }
 
+            $suffix = substr($normalizedPhone, -10);
             $query->where('phone', 'like', '%' . $suffix);
+            $lookupByPhone = true;
         } else {
             throw ValidationException::withMessages(['phone' => ['Provide a phone or a ticket number.']]);
         }
@@ -181,20 +192,29 @@ class CheckoutController extends Controller
 
         return response()->json([
             'raffle' => ['id' => $raffle->id, 'title' => $raffle->title, 'status' => $raffle->status->value],
-            'orders' => $orders->map(fn (Order $order) => [
-                'id' => $order->id,
-                'customer_name' => $order->customer_name,
-                'email' => $order->email,
-                'phone' => $order->phone,
-                'status' => $order->status->value,
-                'created_at' => $order->created_at->toIso8601String(),
-                'total_amount' => $order->total_amount,
-                'tickets' => $order->tickets->map(fn (Ticket $ticket) => [
-                    'id' => $ticket->id,
-                    'number' => $ticket->number,
-                    'status' => $ticket->status,
-                ])->values(),
-            ])->values(),
+            'orders' => $orders->map(function (Order $order) use ($lookupByPhone): array {
+                $result = [
+                    'id' => $order->id,
+                    'status' => $order->status->value,
+                    'created_at' => $order->created_at->toIso8601String(),
+                    'total_amount' => $order->total_amount,
+                    'tickets' => $order->tickets->map(fn (Ticket $ticket) => [
+                        'id' => $ticket->id,
+                        'number' => $ticket->number,
+                        'status' => $ticket->status,
+                    ])->values(),
+                ];
+
+                if ($lookupByPhone) {
+                    $result += [
+                        'customer_name' => $order->customer_name,
+                        'email' => $order->email,
+                        'phone' => $order->phone,
+                    ];
+                }
+
+                return $result;
+            })->values(),
             'message' => $orders->isEmpty() ? 'No encontramos boletos con esos datos.' : null,
         ]);
     }
