@@ -25,12 +25,16 @@ class ApproveOrderService
     public function approve(Order $order): Order
     {
         $order = DB::transaction(function () use ($order) {
-            Raffle::whereKey($order->raffle_id)->lockForUpdate()->firstOrFail();
+            $raffle = Raffle::whereKey($order->raffle_id)->lockForUpdate()->firstOrFail();
             /** @var Order $locked */
             $locked = Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
 
             if ($locked->status !== OrderStatus::PendingValidation) {
                 throw new RuntimeException("Order {$locked->id} is not pending validation.");
+            }
+
+            if ($locked->quantity > $raffle->tickets_available_count) {
+                throw new RuntimeException('Not enough sellable capacity remains for this order.');
             }
 
             foreach ($this->pickNumbers($locked) as $number) {

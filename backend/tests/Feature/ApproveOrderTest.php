@@ -102,13 +102,43 @@ class ApproveOrderTest extends TestCase
 
     public function test_assigned_numbers_never_collide_with_existing_tickets(): void
     {
+        $raffle = Raffle::findOrFail(20);
+        $raffle->update(['tickets_sold_count' => 0]);
+        Ticket::where('raffle_id', $raffle->id)->delete();
+        $raffle->prizeNumbers()->delete();
+        $raffle->update(['ticket_goal' => 10, 'digit_count' => 1]);
+        $this->order->update(['quantity' => 4]);
         Ticket::create(['raffle_id' => 20, 'number' => '0', 'status' => 'validated']);
-        Raffle::query()->where('id', 20)->update(['digit_count' => 1]);
 
         app(ApproveOrderService::class)->approve($this->order);
 
         $numbers = Ticket::where('order_id', $this->order->id)->pluck('number');
         $this->assertFalse($numbers->contains('0'), 'already-sold numbers must be excluded');
         $this->assertCount(4, $numbers->unique());
+    }
+
+    public function test_approval_cannot_exceed_remaining_goal_after_another_pending_order_sells(): void
+    {
+        $raffle = Raffle::findOrFail(20);
+        $raffle->update(['tickets_sold_count' => 0, 'ticket_goal' => 10, 'digit_count' => 2]);
+        $raffle->prizeNumbers()->delete();
+        $this->order->update(['quantity' => 6]);
+        $second = $this->order->replicate();
+        $second->public_view_token = 'token-abc-456';
+        $second->save();
+
+        app(ApproveOrderService::class)->approve($this->order);
+        try {
+            app(ApproveOrderService::class)->approve($second);
+            $this->fail('Approval beyond the raffle goal must be rejected.');
+        } catch (RuntimeException $exception) {
+            $this->assertSame('Not enough sellable capacity remains for this order.', $exception->getMessage());
+        }
+
+        $this->assertSame(OrderStatus::PendingValidation, $second->fresh()->status);
+        $this->assertSame(6, Ticket::where('order_id', $this->order->id)->count());
+        $this->assertSame(0, Ticket::where('order_id', $second->id)->count());
+        $this->assertSame(6, (int) $raffle->fresh()->tickets_sold_count);
+        Mail::assertQueued(OrderValidated::class, 1);
     }
 }
