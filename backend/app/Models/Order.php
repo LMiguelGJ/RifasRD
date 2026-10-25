@@ -24,12 +24,12 @@ class Order extends Model
 
     public function raffle(): BelongsTo
     {
-        return $this->belongsTo(Raffle::class);
+        return $this->belongsTo(Raffle::class)->withTrashed();
     }
 
     public function ticketCombo(): BelongsTo
     {
-        return $this->belongsTo(TicketCombo::class);
+        return $this->belongsTo(TicketCombo::class)->withTrashed();
     }
 
     public function participant(): BelongsTo
@@ -39,7 +39,7 @@ class Order extends Model
 
     public function bankAccount(): BelongsTo
     {
-        return $this->belongsTo(BankAccount::class);
+        return $this->belongsTo(BankAccount::class)->withTrashed();
     }
 
     public function tickets(): HasMany

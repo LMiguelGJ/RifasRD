@@ -171,4 +171,48 @@ class AdminResourcesTest extends TestCase
 
         $this->assertNull($raffle->fresh()->draw_at);
     }
+
+    public function test_package_reordering_persists_to_public_catalog_order(): void
+    {
+        $raffle = Raffle::findOrFail(20);
+
+        Livewire::test(EditRaffle::class, ['record' => $raffle->getKey()])
+            ->fillForm(['ticketCombos' => [
+                ['quantity' => 10, 'package_price' => '500.00', 'show_on_public' => true, 'accent' => 'blue'],
+                ['quantity' => 12, 'package_price' => '600.00', 'show_on_public' => true, 'accent' => 'gold'],
+            ]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame([10, 12], $raffle->ticketCombos()->orderBy('sort_order')->pluck('quantity')->all());
+        $this->assertSame([10, 12], array_column($this->getJson('/api/raffles/20')->assertOk()->json('ticket_combos'), 'quantity'));
+    }
+
+    public function test_package_form_rejects_quantities_outside_raffle_bounds_and_negative_price(): void
+    {
+        $raffle = Raffle::findOrFail(22);
+        $originalCount = $raffle->ticketCombos()->count();
+
+        Livewire::test(EditRaffle::class, ['record' => $raffle->getKey()])
+            ->fillForm(['ticketCombos' => [
+                ['quantity' => 1, 'package_price' => '-1.00', 'show_on_public' => true, 'accent' => 'blue'],
+            ]])
+            ->call('save')
+            ->assertHasFormErrors();
+
+        $this->assertSame($originalCount, $raffle->ticketCombos()->count());
+    }
+
+    public function test_create_actions_exist_and_user_creation_remains_admin_only(): void
+    {
+        Livewire::test(ListBankAccounts::class)->assertActionVisible('create');
+        Livewire::test(ListWinners::class)->assertActionVisible('create');
+        Livewire::test(\App\Filament\Resources\UserResource\Pages\ListUsers::class)
+            ->assertActionVisible('create');
+
+        $operator = User::factory()->create(['role' => 'operator']);
+        $this->actingAs($operator);
+        $this->assertFalse(\App\Filament\Resources\UserResource::canViewAny());
+        $this->assertFalse(\App\Filament\Resources\UserResource::canCreate());
+    }
 }

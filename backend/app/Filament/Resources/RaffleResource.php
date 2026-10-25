@@ -10,6 +10,7 @@ use App\Models\Image;
 use App\Models\Raffle;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -76,12 +77,16 @@ class RaffleResource extends Resource
                         }
                     }),
             ])->columns(3),
-            Forms\Components\Section::make('Paquetes')->schema([
-                Forms\Components\Repeater::make('ticketCombos')->label('')
+            Forms\Components\Section::make('Paquetes')
+                ->description('Agrega paquetes de boletos para ofrecer cantidades y precios especiales. Puedes reordenarlos; al quitar uno comprado se conserva para el historial del pedido.')
+                ->schema([
+                Forms\Components\Repeater::make('ticketCombos')->label('Paquetes disponibles')
                     ->relationship()
+                    ->addActionLabel('Agregar paquete')
+                    ->deleteAction(fn (FormAction $action) => $action->label('Quitar paquete')->requiresConfirmation()->modalHeading('Quitar paquete')->modalDescription('Los pedidos existentes conservarán este paquete en su historial.'))
                     ->schema([
-                        Forms\Components\TextInput::make('quantity')->label('Boletos')->numeric()->required(),
-                        Forms\Components\TextInput::make('package_price')->label('Precio del paquete')->numeric()->required(),
+                        Forms\Components\TextInput::make('quantity')->label('Boletos')->numeric()->integer()->minValue(1)->required(),
+                        Forms\Components\TextInput::make('package_price')->label('Precio del paquete')->numeric()->minValue(0.01)->required(),
                         Forms\Components\Select::make('accent')->label('Acento')->options([
                             'blue' => 'Azul',
                             'gold' => 'Dorado',
@@ -90,7 +95,8 @@ class RaffleResource extends Resource
                     ])
                     ->columns(4)
                     ->defaultItems(0)
-                    ->reorderable('sort_order')
+                    ->orderColumn('sort_order')
+                    ->reorderable()
                     ->collapsible(),
             ]),
         ]);

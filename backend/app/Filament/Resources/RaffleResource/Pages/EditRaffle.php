@@ -29,7 +29,11 @@ class EditRaffle extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Retirar rifa')
+                ->modalHeading('Retirar rifa del catálogo')
+                ->modalDescription('La rifa dejará de aparecer en el catálogo y no aceptará nuevas compras. Los pedidos, boletos, ganadores y enlaces existentes se conservarán para consulta histórica.')
+                ->modalSubmitActionLabel('Retirar rifa'),
         ];
     }
 }

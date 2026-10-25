@@ -19,7 +19,7 @@ class Winner extends Model
 
     public function raffle(): BelongsTo
     {
-        return $this->belongsTo(Raffle::class);
+        return $this->belongsTo(Raffle::class)->withTrashed();
     }
 
     public function ticket(): BelongsTo

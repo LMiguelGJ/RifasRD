@@ -57,7 +57,12 @@ class BankAccountResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
-                Tables\Actions\DeleteAction::make()->extraAttributes(['class' => 'rd-row-action']),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Retirar')
+                    ->modalHeading('Retirar cuenta bancaria')
+                    ->modalDescription('La cuenta dejará de aparecer en pagos nuevos. Los pedidos anteriores conservarán su referencia e historial.')
+                    ->modalSubmitActionLabel('Retirar cuenta')
+                    ->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Enums\RaffleStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Raffle extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'category_id', 'image_id', 'title', 'description', 'ticket_goal', 'ticket_price',
         'max_tickets_per_user', 'min_tickets_per_user', 'winners_count', 'digit_count',
