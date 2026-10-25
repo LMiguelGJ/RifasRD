@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // TLS ends at the platform proxy (Dokploy/Traefik); nginx in this container
+        // only ever sees plain HTTP from it. Trust its X-Forwarded-* headers so
+        // asset and redirect URLs are generated as https instead of being blocked
+        // by the browser as mixed content.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
