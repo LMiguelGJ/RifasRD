@@ -91,27 +91,51 @@ COPY <<'EOF' /etc/supervisor/supervisord.conf
 nodaemon=true
 user=root
 
+; Every program logs to the container's stdout/stderr so `docker logs` (and
+; Dokploy) show WHY something exited. Without this, supervisord swallows it.
 [program:postgres]
 command=/bin/sh -c 'exec "$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -n1)/postgres" -D /var/lib/postgresql/data -c listen_addresses=127.0.0.1'
 user=postgres
+autostart=true
 autorestart=true
+; Keep retrying: a lock held by a task that is still shutting down clears in seconds.
+startsecs=3
+startretries=40
+stopsignal=INT
+stopwaitsecs=30
 priority=1
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
 
 [program:migrate]
 command=/migrate.sh
 autorestart=false
 startsecs=0
 priority=2
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
 
 [program:php-fpm]
 command=php-fpm
 autorestart=true
 priority=10
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
 
 [program:nginx]
 command=nginx -g "daemon off;"
 autorestart=true
 priority=10
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
 
 [program:queue]
 ; Waits for /migrate.sh to finish: before that the role/tables do not exist.
