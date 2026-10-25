@@ -82,10 +82,15 @@ class AdminMobileAndPhotoTest extends TestCase
         Storage::fake('public');
         $before = Raffle::findOrFail(31)->image_id;
 
-        Livewire::test(EditRaffle::class, ['record' => 31])
+        $component = Livewire::test(EditRaffle::class, ['record' => 31])
             ->fillForm(['banner' => UploadedFile::fake()->image('nueva.jpg', 600, 400)])
             ->call('save')
             ->assertHasNoFormErrors();
+
+        // The page must show the NEW photo right after saving, not the stale one.
+        $html = $component->html();
+        $this->assertStringContainsString('/storage/raffles/', $html);
+        $this->assertStringNotContainsString('/demo/rev/cbr1000rr-repsol.webp', $html);
 
         $raffle = Raffle::findOrFail(31);
         $this->assertNotSame($before, $raffle->image_id, 'the raffle must point at the new image');

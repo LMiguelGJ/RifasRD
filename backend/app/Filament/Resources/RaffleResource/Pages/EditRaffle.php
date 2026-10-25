@@ -15,6 +15,17 @@ class EditRaffle extends EditRecord
         return RaffleResource::bindBanner($data);
     }
 
+    /**
+     * The "current photo" preview reads the loaded record, whose cached relations
+     * still point at the old image. Reload it so the page shows what was just saved.
+     */
+    protected function afterSave(): void
+    {
+        $this->record->refresh();
+        $this->record->unsetRelation('image');
+        $this->fillForm();
+    }
+
     protected function getHeaderActions(): array
     {
         return [
