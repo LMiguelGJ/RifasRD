@@ -58,16 +58,22 @@ class OrderResource extends Resource
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            // Tapping a row opens the order: the phone hides the separate View button.
+            ->recordUrl(fn (Order $record): string => static::getUrl('view', ['record' => $record]))
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('#')->sortable(),
-                Tables\Columns\TextColumn::make('customer_name')->label('Cliente')->searchable()->limit(24),
-                Tables\Columns\TextColumn::make('raffle.title')->label('Rifa')->limit(28)->toggleable(),
-                Tables\Columns\TextColumn::make('total_amount')->label('Total')->money('DOP', true)->sortable(),
-                Tables\Columns\TextColumn::make('bankAccount.bank_name')->label('Banco')->toggleable(),
-                Tables\Columns\TextColumn::make('phone')->label('Teléfono')->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('id')->label('#')->sortable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('customer_name')->label('Cliente')->searchable()
+                    ->wrap()
+                    // Phones hide the secondary columns, so the essentials ride under the name.
+                    ->description(fn (Order $record): string => ($record->raffle?->title ?? '') . ' · RD$ ' . $record->total_amount)
+                    ->extraAttributes(['class' => 'rd-mobile-desc']),
+                Tables\Columns\TextColumn::make('raffle.title')->label('Rifa')->limit(28)->toggleable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('total_amount')->label('Total')->money('DOP', true)->sortable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('bankAccount.bank_name')->label('Banco')->toggleable()->visibleFrom('lg'),
+                Tables\Columns\TextColumn::make('phone')->label('Teléfono')->searchable()->toggleable()->visibleFrom('lg'),
                 // OrderStatus provides label and colour (HasLabel/HasColor), so no closures.
-                Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
-                Tables\Columns\TextColumn::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i')->sortable()->toggleable(),
+                Tables\Columns\TextColumn::make('status')->label('Estado')->badge()->wrap(),
+                Tables\Columns\TextColumn::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i')->sortable()->toggleable()->visibleFrom('lg'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Estado')
@@ -81,7 +87,7 @@ class OrderResource extends Resource
                     ->relationship('raffle', 'title'),
             ])
             ->actions([
-                Tables\Actions\Action::make('approve')->label('Aprobar')
+                Tables\Actions\Action::make('approve')->label('Aprobar')->tooltip('Aprobar')->extraAttributes(['class' => 'rd-row-action'])
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
@@ -89,7 +95,7 @@ class OrderResource extends Resource
                     ->action(function (Order $record) {
                         static::safeAction(fn () => app(ApproveOrderService::class)->approve($record), $record, 'aprobado');
                     }),
-                Tables\Actions\Action::make('reject')->label('Rechazar')
+                Tables\Actions\Action::make('reject')->label('Rechazar')->tooltip('Rechazar')->extraAttributes(['class' => 'rd-row-action'])
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
@@ -97,11 +103,11 @@ class OrderResource extends Resource
                     ->action(function (Order $record) {
                         static::safeAction(fn () => app(ApproveOrderService::class)->reject($record), $record, 'rechazado');
                     }),
-                Tables\Actions\Action::make('voucher')->label('Comprobante')
+                Tables\Actions\Action::make('voucher')->label('Comprobante')->tooltip('Comprobante')->extraAttributes(['class' => 'rd-row-action'])
                     ->icon('heroicon-o-document')
                     ->visible(fn (Order $record): bool => (bool) $record->voucher_path)
                     ->action(fn (Order $record) => response()->download(VoucherPath::resolve($record->voucher_path))),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()->tooltip('Ver')->extraAttributes(['class' => 'rd-row-action rd-hide-sm']),
             ])
             ->bulkActions([]);
     }

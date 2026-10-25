@@ -21,9 +21,9 @@ class TopRaffles extends BaseWidget
             ->query(fn () => Raffle::query()->orderByDesc('tickets_sold_count')->limit(5))
             ->columns([
                 Tables\Columns\TextColumn::make('title')->label('Rifa')->limit(40),
-                Tables\Columns\TextColumn::make('ticket_price')->label('Precio')->money('DOP', true),
+                Tables\Columns\TextColumn::make('ticket_price')->label('Precio')->money('DOP', true)->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('tickets_sold_count')->label('Vendidos'),
-                Tables\Columns\TextColumn::make('tickets_available_count')->label('Disponibles'),
+                Tables\Columns\TextColumn::make('tickets_available_count')->label('Disponibles')->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('progress')
                     ->label('% vendido')
                     ->state(fn (Raffle $raffle): string => $raffle->ticket_goal > 0

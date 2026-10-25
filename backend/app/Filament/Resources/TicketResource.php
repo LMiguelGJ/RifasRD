@@ -43,15 +43,15 @@ class TicketResource extends Resource
             ->defaultSort('id', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('number')->label('Número')->searchable()->copyable(),
-                Tables\Columns\TextColumn::make('raffle.title')->label('Rifa')->limit(30)->toggleable(),
-                Tables\Columns\TextColumn::make('order.id')->label('Pedido #')->sortable()->toggleable(),
-                Tables\Columns\TextColumn::make('order.customer_name')->label('Cliente')->limit(20)->toggleable(),
+                Tables\Columns\TextColumn::make('raffle.title')->label('Rifa')->limit(30)->toggleable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('order.id')->label('Pedido #')->sortable()->toggleable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('order.customer_name')->label('Cliente')->limit(20)->toggleable()->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('order.phone')->label('Teléfono')->searchable(),
                 Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

@@ -52,15 +52,15 @@ class WinnerResource extends Resource
                     ->circular()
                     ->getStateUsing(fn (Winner $record): ?string => $record->portraitImage ? url($record->portraitImage->url) : null),
                 Tables\Columns\TextColumn::make('display_name')->label('Ganador')->searchable(),
-                Tables\Columns\TextColumn::make('display_raffle_title')->label('Rifa / premio')->limit(32),
-                Tables\Columns\TextColumn::make('display_ticket_number')->label('Número')->placeholder('—'),
-                Tables\Columns\TextColumn::make('winner_type')->label('Tipo')->badge()->formatStateUsing(fn (string $state): string => $state === 'main' ? 'Principal' : 'Por número'),
-                Tables\Columns\TextColumn::make('drawn_at')->label('Sorteo')->dateTime('d/m/Y H:i')->placeholder('—'),
+                Tables\Columns\TextColumn::make('display_raffle_title')->label('Rifa / premio')->limit(32)->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('display_ticket_number')->label('Número')->placeholder('—')->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('winner_type')->label('Tipo')->badge()->formatStateUsing(fn (string $state): string => $state === 'main' ? 'Principal' : 'Por número')->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('drawn_at')->label('Sorteo')->dateTime('d/m/Y H:i')->placeholder('—')->visibleFrom('lg'),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
+                Tables\Actions\DeleteAction::make()->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

@@ -38,16 +38,16 @@ class ParticipantResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('#')->sortable(),
+                Tables\Columns\TextColumn::make('id')->label('#')->sortable()->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('name')->label('Nombre')->searchable(),
                 Tables\Columns\TextColumn::make('phone')->label('Teléfono')->searchable()->copyable(),
-                Tables\Columns\TextColumn::make('email')->label('Correo')->placeholder('—'),
-                Tables\Columns\TextColumn::make('orders_count')->label('Pedidos')->counts('orders'),
-                Tables\Columns\TextColumn::make('created_at')->label('Alta')->dateTime('d/m/Y')->sortable(),
+                Tables\Columns\TextColumn::make('email')->label('Correo')->placeholder('—')->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('orders_count')->label('Pedidos')->counts('orders')->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('created_at')->label('Alta')->dateTime('d/m/Y')->sortable()->visibleFrom('lg'),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

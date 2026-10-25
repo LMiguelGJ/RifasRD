@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\RaffleStatus;
 use Closure;
+use Illuminate\Support\HtmlString;
 use App\Filament\Resources\RaffleResource\Pages;
 use App\Models\Image;
 use App\Models\Raffle;
@@ -37,7 +38,18 @@ class RaffleResource extends Resource
                 Forms\Components\Textarea::make('description')->label('Descripción')->rows(3),
                 Forms\Components\Select::make('category_id')->label('Categoría')
                     ->relationship('category', 'name')->required()->preload(),
-                Forms\Components\FileUpload::make('banner')->label('Foto')
+                // Editing: show the photo the raffle has today, then offer a replacement.
+                Forms\Components\Placeholder::make('current_photo')
+                    ->label('Foto actual')
+                    ->visibleOn('edit')
+                    ->content(fn (?Raffle $record): HtmlString => new HtmlString(
+                        $record?->image
+                            ? '<img src="' . e(url($record->image->url)) . '" alt="Foto actual de la rifa" class="rd-photo-preview">'
+                            : '<span class="rd-photo-empty">Esta rifa aún no tiene foto.</span>'
+                    )),
+                Forms\Components\FileUpload::make('banner')
+                    ->label(fn (string $operation): string => $operation === 'edit' ? 'Cambiar foto' : 'Foto')
+                    ->helperText('Sube una imagen nueva para reemplazar la actual. JPG o PNG, máximo 5 MB.')
                     ->image()->disk('public')->directory('raffles')->maxSize(5120)
                     ->visibility('public'),
             ])->columns(2),
@@ -88,7 +100,7 @@ class RaffleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('#')->sortable(),
+                Tables\Columns\TextColumn::make('id')->label('#')->sortable()->visibleFrom('md'),
                 // Absolute URL on purpose: the demo photos live under /demo (served by the SPA
                 // build), not in the storage disk. For a non-URL value Filament checks the disk
                 // and renders an empty src when the file is not there.
@@ -97,12 +109,16 @@ class RaffleResource extends Resource
                     ->square()
                     ->toggleable()
                     ->getStateUsing(fn (Raffle $record): ?string => $record->image ? url($record->image->url) : null),
-                Tables\Columns\TextColumn::make('title')->label('Título')->searchable()->limit(36),
-                Tables\Columns\TextColumn::make('category.name')->label('Categoría')->badge(),
-                Tables\Columns\TextColumn::make('ticket_price')->label('Precio')->money('DOP', true),
-                Tables\Columns\TextColumn::make('tickets_sold_count')->label('Vendidos')->sortable(),
-                Tables\Columns\TextColumn::make('tickets_available_count')->label('Disponibles'),
-                Tables\Columns\TextColumn::make('draw_at')->label('Sorteo')->dateTime('d/m/Y H:i')->placeholder('—'),
+                Tables\Columns\TextColumn::make('title')->label('Título')->searchable()
+                    ->wrap()
+                    ->description(fn (Raffle $record): string => 'RD$ ' . number_format((float) $record->ticket_price, 2)
+                        . ($record->ticket_goal > 0 ? ' · ' . round($record->tickets_sold_count / $record->ticket_goal * 100) . '% vendido' : ''))
+                    ->extraAttributes(['class' => 'rd-mobile-desc']),
+                Tables\Columns\TextColumn::make('category.name')->label('Categoría')->badge()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('ticket_price')->label('Precio')->money('DOP', true)->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('tickets_sold_count')->label('Vendidos')->sortable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('tickets_available_count')->label('Disponibles')->visibleFrom('lg'),
+                Tables\Columns\TextColumn::make('draw_at')->label('Sorteo')->dateTime('d/m/Y H:i')->placeholder('—')->visibleFrom('lg'),
                 Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
             ])
             ->filters([
@@ -114,7 +130,7 @@ class RaffleResource extends Resource
                 ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

@@ -48,16 +48,16 @@ class BankAccountResource extends Resource
                     ->square()
                     ->getStateUsing(fn (BankAccount $record): ?string => $record->image ? url($record->image->url) : null),
                 Tables\Columns\TextColumn::make('bank_name')->label('Banco')->searchable(),
-                Tables\Columns\TextColumn::make('account_type')->label('Tipo')->toggleable(),
+                Tables\Columns\TextColumn::make('account_type')->label('Tipo')->toggleable()->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('account_number')->label('Número')->copyable(),
-                Tables\Columns\TextColumn::make('account_holder_name')->label('Titular'),
+                Tables\Columns\TextColumn::make('account_holder_name')->label('Titular')->visibleFrom('md'),
                 Tables\Columns\IconColumn::make('is_active')->label('Activa')->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')->label('Orden')->sortable(),
+                Tables\Columns\TextColumn::make('sort_order')->label('Orden')->sortable()->visibleFrom('lg'),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->extraAttributes(['class' => 'rd-row-action']),
+                Tables\Actions\DeleteAction::make()->extraAttributes(['class' => 'rd-row-action']),
             ])
             ->bulkActions([]);
     }

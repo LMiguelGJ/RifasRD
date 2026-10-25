@@ -200,3 +200,87 @@ html body .fi-simple-main .fi-btn.fi-color-primary {
   width: 100%;
   padding-block: 0.75rem;
 }
+
+/* ---- Phones ---- */
+/* Secondary columns are hidden below md; the essentials ride under the main column.
+   Desktop has real columns for them, so the summary is phone-only. */
+html body .rd-mobile-desc .fi-ta-text-item-description {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  html body .rd-mobile-desc .fi-ta-text-item-description {
+    display: block;
+    white-space: normal;
+    font-size: 0.78rem;
+    color: var(--on-ink-muted);
+  }
+
+  /* Wide tables are never worth a sideways scroll for the primary action. */
+  html body .fi-ta-header-cell,
+  html body .fi-ta-cell {
+    padding-inline: 0.6rem;
+  }
+
+  html body .fi-header-heading {
+    font-size: 1.35rem;
+  }
+}
+
+/* ---- Raffle form: current photo preview ---- */
+html body .rd-photo-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 12rem;
+  border-radius: var(--r-card);
+  border: 1px solid var(--gold-line);
+}
+
+html body .rd-photo-empty {
+  color: var(--on-ink-muted);
+}
+
+/* Row actions: text link on desktop, big icon button on a phone (Aprobar / Rechazar must be reachable). */
+@media (max-width: 767px) {
+  html body .rd-row-action > span {
+    display: none;
+  }
+
+  html body .rd-row-action {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    justify-content: center;
+    border-radius: var(--r-ctl);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  html body .rd-row-action svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  html body .rd-row-action.rd-hide-sm {
+    display: none !important;
+  }
+}
+
+/* Long status badges ("Pendiente de validación") must not squeeze the name column on a phone. */
+@media (max-width: 767px) {
+  html body .fi-ta-cell .fi-badge {
+    white-space: normal;
+    max-width: 6.25rem;
+    text-align: center;
+    line-height: 1.15;
+  }
+}
+
+@media (max-width: 767px) {
+  html body .fi-ta-cell .fi-badge .truncate,
+  html body .fi-ta-cell .fi-badge span {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
