@@ -31,7 +31,9 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Rifas Luxury RD')
             ->brandLogo(fn () => asset('Logo_rifa.png'))
             ->brandLogoHeight('2.75rem')
-            ->favicon(asset('Logo_rifa.png'))
+            // Lazy on purpose: evaluated at render time, after the proxy is trusted.
+            // An eager asset() here runs while the panel registers and yields http://.
+            ->favicon(fn () => asset('Logo_rifa.png'))
             // One theme, like the storefront: black surfaces, gold accents.
             ->darkMode(true, isForced: true)
             ->font('Rubik')

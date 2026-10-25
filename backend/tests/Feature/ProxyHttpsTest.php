@@ -23,6 +23,19 @@ class ProxyHttpsTest extends TestCase
         $this->assertStringNotContainsString('http://rifas.example.com/js/filament', $html);
     }
 
+    public function test_no_href_or_src_of_the_login_page_stays_on_http(): void
+    {
+        // No forwarded host: every self-generated URL uses the app host (localhost),
+        // which is exactly how the favicon was generated before the proxy was trusted.
+        $html = $this->withHeaders(['X-Forwarded-Proto' => 'https'])
+            ->get('/admin/login')
+            ->getContent();
+
+        preg_match_all('/(?:href|src)="(http:\/\/localhost[^"]*)"/', $html, $found);
+
+        $this->assertSame([], $found[1], 'these URLs would be mixed content behind the TLS proxy');
+    }
+
     public function test_plain_http_requests_still_work_without_forwarded_headers(): void
     {
         $this->get('/admin/login')->assertOk();
