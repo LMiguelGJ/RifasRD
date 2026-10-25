@@ -198,8 +198,9 @@ export interface LookupTicket {
 export interface LookupOrder {
   id: number;
   customer_name?: string;
-  email: string | null;
-  phone: string | null;
+  /** Public ticket-number searches omit personal contact fields. */
+  email?: string | null;
+  phone?: string | null;
   status: OrderStatus | string;
   created_at: string;
   total_amount?: string;

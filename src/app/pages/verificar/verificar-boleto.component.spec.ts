@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 
 import { MockRifasApi } from '../../core/api/mock-rifas-api';
 import { RifasApi } from '../../core/api/rifas-api';
-import { Paginated, Raffle } from '../../core/models/models';
+import { LookupResult, Paginated, Raffle } from '../../core/models/models';
 import { VerificarBoletoComponent } from './verificar-boleto.component';
 
 const raffleRow = (id: number): Raffle => ({
@@ -35,6 +35,44 @@ describe('VerificarBoletoComponent pagination', () => {
     expect(calls.map(call => call.page)).toEqual([1, 2]);
     expect(calls.every(call => call.perPage === 50)).toBeTrue();
     TestBed.resetTestingModule();
+  }));
+});
+
+describe('VerificarBoletoComponent private lookup rendering', () => {
+  it('renders ticket results when the API omits personal contact fields', fakeAsync(() => {
+    const result: LookupResult = {
+      raffle: { id: 1, title: 'Public raffle', status: 'active' },
+      orders: [{
+        id: 7, status: 'validated', created_at: '2026-10-25T12:00:00Z',
+        tickets: [{ number: '54321', status: 'validated' }],
+      }],
+    };
+    const lookup = jasmine.createSpy('lookupOrders').and.returnValue(of(result));
+    TestBed.configureTestingModule({
+      imports: [VerificarBoletoComponent],
+      providers: [{ provide: RifasApi, useValue: {
+        getRaffles: () => of({ ...page(1, [raffleRow(1)]), last_page: 1 }),
+        lookupOrders: lookup,
+      } }],
+    });
+    const fixture = TestBed.createComponent(VerificarBoletoComponent);
+    fixture.detectChanges();
+    tick();
+    fixture.componentInstance.selectedRaffleId = '1';
+    fixture.componentInstance.query = '54321';
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.verificar-btn-search') as HTMLButtonElement).click();
+    tick();
+    fixture.detectChanges();
+
+    expect(lookup).toHaveBeenCalledWith(1, { ticket_number: '54321' });
+    const results = fixture.nativeElement.querySelector('.verificar-results') as HTMLElement;
+    expect(results.textContent).toContain('Public raffle');
+    expect(results.textContent).toContain('Orden #7');
+    expect(results.textContent).toContain('Validada');
+    expect(results.querySelector('.verificar-ticket__num')?.textContent?.trim()).toBe('54321');
+    expect(results.textContent).not.toMatch(/undefined|null/);
+    fixture.destroy();
   }));
 });
 
