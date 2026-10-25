@@ -36,7 +36,7 @@ class TicketCombo extends Model
     protected static function booted(): void
     {
         static::saving(function (TicketCombo $combo): void {
-            $raffle = $combo->raffle;
+            $raffle = Raffle::query()->find($combo->raffle_id);
 
             if (! $raffle || ! $combo->isValidForCheckout($raffle)) {
                 throw ValidationException::withMessages([

@@ -155,14 +155,18 @@ The UI checks these for usability, but only the server can enforce them:
 
 In **Rifas → Crear/Editar → Paquetes**, choose **Agregar paquete**, set its
 quantity and total package price, and use **Público** to control its availability.
-Save the raffle to persist additions, edits and ordering. **Quitar paquete** retires
-the package rather than deleting order history; it is excluded from new purchases.
+Save the raffle to persist additions, edits and ordering. The raffle and all its
+packages are saved in one transaction: invalid nested input cannot leave a partial
+raffle or retire existing packages. Package quantities are validated against the
+new purchase limits when both are edited together. **Quitar paquete** retires the
+package rather than deleting order history; it is excluded from new purchases.
 
 **Retirar rifa** removes a raffle from the public catalog and new checkout.
 **Retirar** on a bank account removes it from new payments. Retirement preserves
 existing orders, assigned tickets, winners and historical personal-order links.
 The additive migration introduces `deleted_at` on raffles, packages and banks;
-its rollback intentionally retains these history-preserving columns.
+its rollback intentionally retains these history-preserving columns, and applying
+the migration again safely skips columns that already exist.
 
 When opening purchase, the storefront refetches the raffle's current price,
 availability, status, limits and packages. If that fetch fails, purchase is disabled

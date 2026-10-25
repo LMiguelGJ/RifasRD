@@ -85,7 +85,12 @@ class RaffleResource extends Resource
                     ->addActionLabel('Agregar paquete')
                     ->deleteAction(fn (FormAction $action) => $action->label('Quitar paquete')->requiresConfirmation()->modalHeading('Quitar paquete')->modalDescription('Los pedidos existentes conservarán este paquete en su historial.'))
                     ->schema([
-                        Forms\Components\TextInput::make('quantity')->label('Boletos')->numeric()->integer()->minValue(1)->required(),
+                        Forms\Components\TextInput::make('quantity')->label('Boletos')->numeric()->integer()->minValue(1)->required()
+                            ->rules(fn (Get $get): array => [
+                                'integer',
+                                'min:' . max(1, (int) $get('../../min_tickets_per_user')),
+                                'max:' . max(1, (int) $get('../../max_tickets_per_user')),
+                            ]),
                         Forms\Components\TextInput::make('package_price')->label('Precio del paquete')->numeric()->minValue(0.01)->required(),
                         Forms\Components\Select::make('accent')->label('Acento')->options([
                             'blue' => 'Azul',

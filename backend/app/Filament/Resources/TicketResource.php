@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
+use Closure;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -28,7 +29,14 @@ class TicketResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('number')->label('Número')->required(),
-            Forms\Components\Select::make('raffle_id')->label('Rifa')->relationship('raffle', 'title')->required(),
+            Forms\Components\Select::make('raffle_id')->label('Rifa')->relationship('raffle', 'title')->required()
+                ->rule(fn (?Ticket $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($record): void {
+                    $orderRaffleId = $record?->order?->raffle_id;
+
+                    if ($orderRaffleId !== null && (int) $value !== (int) $orderRaffleId) {
+                        $fail('El boleto debe pertenecer a la misma rifa que su pedido.');
+                    }
+                }),
             Forms\Components\Select::make('status')->label('Estado')->options([
                 'validated' => 'Validado',
                 'sold' => 'Vendido',

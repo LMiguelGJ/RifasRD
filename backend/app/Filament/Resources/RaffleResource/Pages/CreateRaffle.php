@@ -9,6 +9,8 @@ class CreateRaffle extends CreateRecord
 {
     protected static string $resource = RaffleResource::class;
 
+    protected ?bool $hasDatabaseTransactions = true;
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         return RaffleResource::bindBanner($data);

@@ -10,6 +10,19 @@ class EditRaffle extends EditRecord
 {
     protected static string $resource = RaffleResource::class;
 
+    protected ?bool $hasDatabaseTransactions = true;
+
+    protected function beforeSave(): void
+    {
+        // Filament saves repeater relationships before the parent update. Publish
+        // the validated limits inside this page's transaction so package model
+        // validation sees the new bounds. Any later error rolls back both.
+        $this->getRecord()->newQuery()->whereKey($this->getRecord()->getKey())->update([
+            'min_tickets_per_user' => $this->data['min_tickets_per_user'],
+            'max_tickets_per_user' => $this->data['max_tickets_per_user'],
+        ]);
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         return RaffleResource::bindBanner($data);
