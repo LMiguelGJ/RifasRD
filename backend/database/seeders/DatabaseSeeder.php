@@ -34,7 +34,9 @@ class DatabaseSeeder extends Seeder
 
         // Only rotate the password when one is explicitly configured, so a
         // reboot never locks the operator out of the panel.
-        if ($password) {
+        // Compare first: re-saving the same password re-salts the hash, which
+        // invalidates every open session on each container boot.
+        if ($password && ! Hash::check($password, $user->password)) {
             $changes['password'] = $password;
         }
 

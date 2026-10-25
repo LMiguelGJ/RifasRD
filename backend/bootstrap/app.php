@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // asset and redirect URLs are generated as https instead of being blocked
         // by the browser as mixed content.
         $middleware->trustProxies(at: '*');
+
+        // There is no `login` route (only the Filament panel login), so any other
+        // "unauthenticated" redirect used to blow up with RouteNotFoundException.
+        $middleware->redirectGuestsTo('/admin/login');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
