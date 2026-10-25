@@ -42,6 +42,11 @@ class BankAccountResource extends Resource
     {
         return $table
             ->columns([
+                // Absolute URL: logos live under /demo (see RaffleResource for why).
+                Tables\Columns\ImageColumn::make('logo_url')
+                    ->label('Logo')
+                    ->square()
+                    ->getStateUsing(fn (BankAccount $record): ?string => $record->image ? url($record->image->url) : null),
                 Tables\Columns\TextColumn::make('bank_name')->label('Banco')->searchable(),
                 Tables\Columns\TextColumn::make('account_type')->label('Tipo')->toggleable(),
                 Tables\Columns\TextColumn::make('account_number')->label('Número')->copyable(),

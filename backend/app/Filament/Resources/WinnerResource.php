@@ -47,6 +47,10 @@ class WinnerResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('portrait_url')
+                    ->label('Foto')
+                    ->circular()
+                    ->getStateUsing(fn (Winner $record): ?string => $record->portraitImage ? url($record->portraitImage->url) : null),
                 Tables\Columns\TextColumn::make('display_name')->label('Ganador')->searchable(),
                 Tables\Columns\TextColumn::make('display_raffle_title')->label('Rifa / premio')->limit(32),
                 Tables\Columns\TextColumn::make('display_ticket_number')->label('Número')->placeholder('—'),

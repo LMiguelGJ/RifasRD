@@ -89,7 +89,14 @@ class RaffleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('#')->sortable(),
-                Tables\Columns\ImageColumn::make('image.url')->label('Foto')->square()->toggleable(),
+                // Absolute URL on purpose: the demo photos live under /demo (served by the SPA
+                // build), not in the storage disk. For a non-URL value Filament checks the disk
+                // and renders an empty src when the file is not there.
+                Tables\Columns\ImageColumn::make('image_url')
+                    ->label('Foto')
+                    ->square()
+                    ->toggleable()
+                    ->getStateUsing(fn (Raffle $record): ?string => $record->image ? url($record->image->url) : null),
                 Tables\Columns\TextColumn::make('title')->label('Título')->searchable()->limit(36),
                 Tables\Columns\TextColumn::make('category.name')->label('Categoría')->badge(),
                 Tables\Columns\TextColumn::make('ticket_price')->label('Precio')->money('DOP', true),
